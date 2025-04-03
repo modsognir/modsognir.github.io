@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Editor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: #f0f0f0;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            grid-column: 1 / span 2;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        #editor {
+            flex-grow: 1;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 1rem;
+            line-height: 1.5;
+            resize: none;
+            border: none;
+            outline: none;
+            overflow-y: auto;
+            border-right: 1px solid #ddd;
+        }
+
+        #preview {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            border-left: 1px solid #ddd;
+        }
+
+        body.dragover::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 4px dashed #1890ff;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        #open-file, #clear-storage {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 5px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        #clear-storage {
+            background-color: #ff5722;
+        }
+
+        #preview h1, #preview h2, #preview h3, #preview h4, #preview h5, #preview h6 {
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+        }
+
+        #preview p {
+            margin-bottom: 1em;
+        }
+
+        #preview code {
+            background-color: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+        #preview pre {
+            background-color: #f5f5f5;
+            padding: 1em;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        #preview blockquote {
+            border-left: 4px solid #ddd;
+            padding-left: 1em;
+            margin-left: 0;
+            color: #666;
+        }
+
+        #preview table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 1em;
+        }
+
+        #preview th, #preview td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        #preview th {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>
+          Markdown Editor
+        </h1>
+    </header>
+
+    <div class="container">
+        <textarea id="editor" placeholder="# Type your Markdown here"></textarea>
+    </div>
+
+    <div class="container">
+        <div id="preview"></div>
+    </div>
+
+    <input type="file" id="file-input" style="display: none;" accept=".md,.markdown,.txt">
+    <div id="drop-instruction" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0,0,0,0.7); color: white; padding: 20px; border-radius: 10px; display: none; pointer-events: none; z-index: 1000;">
+        Drop Markdown file anywhere
+    </div>
+
+    <script>
+        function debounce(func, wait) {
+            let timeout;
+            return function() {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    func.apply(context, args);
+                }, wait);
+            };
+        }
+
+        const saveToStorage = debounce(() => {
+            localStorage.setItem('markdownContent', editor.value);
+        }, 500);
+
+        function renderMarkdown() {
+            marked.setOptions({
+                breaks: true,
+                gfm: true
+            });
+
+            preview.innerHTML = marked.parse(editor.value);
+
+            saveToStorage();
+        }
+
+        function handleFileSelect(e) {
+            if (e.target.files.length) {
+                handleFile(e.target.files[0]);
+            }
+        }
+
+        function handleFile(file) {
+            if (file.type.match('text.*') || file.name.match(/\.(md|markdown|txt)$/i)) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    editor.value = e.target.result;
+                    renderMarkdown();
+                };
+
+                reader.readAsText(file);
+            } else {
+                alert('Please select a valid Markdown file (.md, .markdown, or .txt)');
+            }
+        }
+
+        const editor = document.getElementById('editor');
+        const preview = document.getElementById('preview');
+        const fileInput = document.getElementById('file-input');
+
+        const saveStatus = document.getElementById('save-status');
+
+        const savedContent = localStorage.getItem('markdownContent');
+
+        if (savedContent) {
+            editor.value = savedContent;
+        } else {
+            editor.value = `# Let's edit some markdown
+
+## Features
+- Real-time Markdown rendering
+- Drag & drop file support
+- Auto-save to localStorage
+
+## Examples
+
+### Code Block
+\`\`\`javascript
+function helloWorld() {
+    console.log("Hello, world!");
+}
+\`\`\`
+
+### Table
+| Name | Description |
+|------|-------------|
+| Markdown | Lightweight markup language |
+| HTML | Standard markup language |
+
+### Blockquote
+> I don't know half of you half as well as I should like; and I like less than half of you half as well as you deserve.
+
+Try editing this text or drag in your own Markdown file!`;
+        }
+
+        renderMarkdown();
+
+        editor.addEventListener('input', renderMarkdown);
+        fileInput.addEventListener('change', handleFileSelect);
+
+        const openFileBtn = document.getElementById('open-file');
+        openFileBtn.addEventListener('click', () => fileInput.click());
+
+        const clearStorageBtn = document.getElementById('clear-storage');
+        clearStorageBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to create a new document? Any unsaved changes will be lost.')) {
+                localStorage.removeItem('markdownContent');
+                editor.value = '# New Document\n\nStart typing here...';
+                renderMarkdown();
+            }
+        });
+
+        const dropInstruction = document.getElementById('drop-instruction');
+
+        document.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            document.body.classList.add('dragover');
+            dropInstruction.style.display = 'block';
+        });
+
+        document.addEventListener('dragleave', (e) => {
+            if (!e.relatedTarget || e.relatedTarget === document.documentElement) {
+                document.body.classList.remove('dragover');
+                dropInstruction.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('drop', (e) => {
+            e.preventDefault();
+            document.body.classList.remove('dragover');
+            dropInstruction.style.display = 'none';
+
+            if (e.dataTransfer.files.length) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+    </script>
+</body>
+</html>
