@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rails New Command Generator</title>
+    <script defer data-domain="jsf.io" src="https://plausible.io/js/script.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #d30001;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .option-group {
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .option-group h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .option-item {
+            margin-bottom: 10px;
+        }
+        .option-item label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .option-item small {
+            display: block;
+            color: #666;
+            font-size: 0.8em;
+            margin-top: 2px;
+        }
+        select, input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .command-output {
+            background-color: #272822;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .copy-btn {
+            background-color: #d30001;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .copy-btn:hover {
+            background-color: #a70001;
+        }
+        .app-path {
+            margin-bottom: 20px;
+        }
+        .app-path input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rails New Command Generator</h1>
+
+    <div class="container">
+        <div class="app-path">
+            <label for="app-path"><strong>App Name:</strong></label>
+            <input type="text" id="app-path" placeholder="my_rails_app" value="my_rails_app">
+        </div>
+
+        <div class="options-container">
+            <!-- Database Options -->
+            <div class="option-group">
+                <h3>Database</h3>
+                <div class="option-item">
+                    <label for="database">Database (-d, --database)</label>
+                    <select id="database">
+                        <option value="">Default (sqlite3)</option>
+                        <option value="mysql">mysql</option>
+                        <option value="trilogy">trilogy</option>
+                        <option value="postgresql">postgresql</option>
+                        <option value="sqlite3">sqlite3</option>
+                        <option value="mariadb-mysql">mariadb-mysql</option>
+                        <option value="mariadb-trilogy">mariadb-trilogy</option>
+                    </select>
+                    <small>Preconfigure for selected database (Default: sqlite3)</small>
+                </div>
+            </div>
+
+            <!-- Frontend Options -->
+            <div class="option-group">
+                <h3>Frontend</h3>
+                <div class="option-item">
+                    <label for="javascript">JavaScript Approach (-j, --javascript)</label>
+                    <select id="javascript">
+                        <option value="">Default (importmap)</option>
+                        <option value="importmap">importmap</option>
+                        <option value="bun">bun</option>
+                        <option value="webpack">webpack</option>
+                        <option value="esbuild">esbuild</option>
+                        <option value="rollup">rollup</option>
+                    </select>
+                    <small>Choose JavaScript approach (Default: importmap)</small>
+                </div>
+                <div class="option-item">
+                    <label for="css">CSS Processor (-c, --css)</label>
+                    <select id="css">
+                        <option value="">None</option>
+                        <option value="tailwind">tailwind</option>
+                        <option value="bootstrap">bootstrap</option>
+                        <option value="bulma">bulma</option>
+                        <option value="postcss">postcss</option>
+                        <option value="sass">sass</option>
+                    </select>
+                    <small>Choose CSS processor</small>
+                </div>
+            </div>
+
+            <!-- Main Configuration Options -->
+            <div class="option-group">
+                <h3>Application Type</h3>
+                <div class="option-item">
+                    <label>
+                        <input type="checkbox" id="api"> API Mode (--api)
+                    </label>
+                    <small>Preconfigure smaller stack for API only apps</small>
+                </div>
+                <div class="option-item">
+                    <label>
+                        <input type="checkbox" id="minimal"> Minimal (--minimal)
+                    </label>
+                    <small>Preconfigure a minimal rails app</small>
+                </div>
+                <div class="option-item">
+                    <label for="template">Template (-m, --template)</label>
+                    <input type="text" id="template" placeholder="URL or path to template">
+                    <small>Path to application template (filesystem path or URL)</small>
+                </div>
+            </div>
+
+            <!-- Skip Options -->
+            <div class="option-group">
+                <h3>Skip Options (1/2)</h3>
+                <div class="option-item">
+                    <label><input type="checkbox" id="skip-git"> Skip Git (-G, --skip-git)</label>
+                    <small>Skip git init, .gitignore and .gitattributes</small>
+                </div>
+                <div class="option-item">
+                    <label><input type="checkbox" id="skip-docker"> Skip Docker (--skip-docker)</label>
+                    <small>Skip Dockerfile, .dockerignore and bin/docker-entrypoint</small>
+                </div>
+                <div class="option-item">
+                    <label><input type="checkbox" id="skip-test"> Skip Test (-T, --skip-test)</label>
+                    <small>Skip test files</small>
+                </div>
+                <div class="option-item">
+                    <label><input type="checkbox" id="skip-system-test"> Skip System Test (--skip-system-test)</label>
+                    <small>Skip system test files</small>
+                </div>
+                <div class="option-item">
+                    <label><input type="checkbox" id="skip-javascript"> Skip JavaScript (-J, --skip-javascript)</label>
+                    <small>Skip JavaScript files</small>
+                </div>
+            </div>
+
+            <!-- Skip Options Part 2 -->
+            <div class="option-group">
+                <h3>Skip Options (2/2)</h3>
+                <div class="option-item">
+                    <label><input type="checkbox" id="skip-hotwire"> Skip Hotwire (--skip-hotwire)</label>
+                    <small>Skip Hotwire integration</small>
+                </div>
+                <div class="option-item">
+                    <label><input type="checkbox" id="skip-jbuilder"> Skip Jbuilder (--skip-jbuilder)</label>
+                    <small>Skip jbuilder gem</small>
+                </div>
+                <div class="option-item">
+                    <label><input type="checkbox" id="skip-asset-pipeline"> Skip Asset Pipeline (-A, --skip-asset-pipeline)</label>
+                    <small>Skip asset pipeline</small>
+                </div>
+                <div class="option-item">
+                    <label><input type="checkbox" id="skip-active-record"> Skip Active Record (-O, --skip-active-record)</label>
+                    <small>Skip Active Record files</small>
+                </div>
+                <div class="option-item">
+                    <label><input type="checkbox" id="skip-action-cable"> Skip Action Cable (-C, --skip-action-cable)</label>
+                    <small>Skip Action Cable files</small>
+                </div>
+            </div>
+
+            <!-- Advanced Options -->
+            <div class="option-group">
+                <h3>Advanced Options</h3>
+                <div class="option-item">
+                    <label><input type="checkbox" id="skip-bundle"> Skip Bundle (-B, --skip-bundle)</label>
+                    <small>Don't run bundle install</small>
+                </div>
+                <div class="option-item">
+                    <label><input type="checkbox" id="dev"> Development Mode (--dev)</label>
+                    <small>Set up with Gemfile pointing to your Rails checkout</small>
+                </div>
+                <div class="option-item">
+                    <label><input type="checkbox" id="edge"> Edge (--edge)</label>
+                    <small>Set up with Gemfile pointing to 8-0-stable branch</small>
+                </div>
+                <div class="option-item">
+                    <label><input type="checkbox" id="main"> Main (--main)</label>
+                    <small>Set up with Gemfile pointing to Rails repository main branch</small>
+                </div>
+            </div>
+        </div>
+
+        <h3>Generated Command:</h3>
+        <div class="command-output" id="command-output">rails new my_rails_app</div>
+        <button class="copy-btn" id="copy-btn">Copy Command</button>
+    </div>
+
+    <script>
+        // Elements
+        const appPathInput = document.getElementById('app-path');
+        const commandOutput = document.getElementById('command-output');
+        const copyBtn = document.getElementById('copy-btn');
+
+        // All option elements
+        const allInputs = document.querySelectorAll('input, select');
+
+        // Generate command function
+        function generateCommand() {
+            let command = 'rails new ';
+
+            // App path
+            const appPath = appPathInput.value.trim() || 'my_rails_app';
+            command += appPath;
+
+            // Database option
+            const database = document.getElementById('database').value;
+            if (database) {
+                command += ` -d ${database}`;
+            }
+
+            // JavaScript option
+            const javascript = document.getElementById('javascript').value;
+            if (javascript) {
+                command += ` -j ${javascript}`;
+            }
+
+            // CSS option
+            const css = document.getElementById('css').value;
+            if (css) {
+                command += ` -c ${css}`;
+            }
+
+            // Template option
+            const template = document.getElementById('template').value.trim();
+            if (template) {
+                command += ` -m ${template}`;
+            }
+
+            // Boolean options
+            const booleanOptions = [
+                { id: 'api', flag: '--api' },
+                { id: 'minimal', flag: '--minimal' },
+                { id: 'skip-git', flag: '-G' },
+                { id: 'skip-docker', flag: '--skip-docker' },
+                { id: 'skip-test', flag: '-T' },
+                { id: 'skip-system-test', flag: '--skip-system-test' },
+                { id: 'skip-javascript', flag: '-J' },
+                { id: 'skip-hotwire', flag: '--skip-hotwire' },
+                { id: 'skip-jbuilder', flag: '--skip-jbuilder' },
+                { id: 'skip-asset-pipeline', flag: '-A' },
+                { id: 'skip-active-record', flag: '-O' },
+                { id: 'skip-action-cable', flag: '-C' },
+                { id: 'skip-bundle', flag: '-B' },
+                { id: 'dev', flag: '--dev' },
+                { id: 'edge', flag: '--edge' },
+                { id: 'main', flag: '--main' }
+            ];
+
+            booleanOptions.forEach(option => {
+                if (document.getElementById(option.id).checked) {
+                    command += ` ${option.flag}`;
+                }
+            });
+
+            commandOutput.textContent = command;
+        }
+
+        // Add event listeners to all inputs
+        allInputs.forEach(input => {
+            input.addEventListener('change', generateCommand);
+            if (input.type === 'text') {
+                input.addEventListener('input', generateCommand);
+            }
+        });
+
+        // Copy command
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(commandOutput.textContent)
+                .then(() => {
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Could not copy text: ', err);
+                    alert('Failed to copy command. Please copy it manually.');
+                });
+        });
+
+        // Initialize
+        generateCommand();
+    </script>
+</body>
+</html>
