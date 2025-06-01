@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Scrambler</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .input-section, .output-section {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 1.1em;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .button-group {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #output {
+            background-color: #f8fafc;
+            border: 2px solid #e2e8f0;
+        }
+
+        .info {
+            background: #e6fffa;
+            border-left: 4px solid #38b2ac;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #2d3748;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text Scrambler</h1>
+
+        <div class="info">
+            <strong>How it works:</strong> Words are replaced with random words of similar length. URLs are transformed to use example.com with randomized path/query components (preserving structure).
+        </div>
+
+        <div class="input-section">
+            <label for="input">Enter your text:</label>
+            <textarea id="input" placeholder="Paste your text here, including URLs like https://google.com/search?q=hello"></textarea>
+        </div>
+
+        <div class="button-group">
+            <button onclick="scrambleText()">Scramble Text</button>
+            <button onclick="clearAll()">Clear All</button>
+        </div>
+
+        <div class="output-section">
+            <label for="output">Scrambled text:</label>
+            <textarea id="output" readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        // Word lists for replacement by length
+        const wordsByLength = {
+            1: ['a', 'i', 'o', 'x', 'y'],
+            2: ['at', 'to', 'of', 'in', 'on', 'by', 'up', 'go', 'no', 'my'],
+            3: ['the', 'and', 'for', 'you', 'can', 'has', 'had', 'him', 'her', 'may'],
+            4: ['that', 'with', 'have', 'this', 'will', 'your', 'from', 'they', 'know', 'want'],
+            5: ['which', 'their', 'would', 'there', 'could', 'other', 'after', 'first', 'never', 'these'],
+            6: ['should', 'around', 'really', 'little', 'before', 'mother', 'though', 'always', 'people', 'friend'],
+            7: ['through', 'without', 'another', 'because', 'between', 'nothing', 'someone', 'kitchen', 'morning', 'evening'],
+            8: ['together', 'mountain', 'sunshine', 'computer', 'bathroom', 'sandwich', 'birthday', 'magazine', 'hospital', 'elephant'],
+            9: ['something', 'beautiful', 'different', 'wonderful', 'important', 'telephone', 'adventure', 'breakfast', 'vegetable', 'apartment'],
+            10: ['everything', 'understand', 'basketball', 'strawberry', 'restaurant', 'individual', 'photograph', 'tremendous', 'background', 'foundation']
+        };
+
+        function getRandomWord(length) {
+            // Create range of lengths to pick from (original length ± 1)
+            const minLength = Math.max(1, length - 1);
+            const maxLength = Math.min(10, length + 1);
+
+            // Collect all words from the valid length range
+            let availableWords = [];
+            for (let len = minLength; len <= maxLength; len++) {
+                if (wordsByLength[len]) {
+                    availableWords = availableWords.concat(wordsByLength[len]);
+                }
+            }
+
+            // If we have words in the range, pick randomly
+            if (availableWords.length > 0) {
+                return availableWords[Math.floor(Math.random() * availableWords.length)];
+            }
+
+            // For very long words or if no words found, generate random letters
+            const chars = 'abcdefghijklmnopqrstuvwxyz';
+            let result = '';
+            const targetLength = Math.max(1, length + Math.floor(Math.random() * 3) - 1); // ±1 variation
+            for (let i = 0; i < targetLength; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function getRandomChar(type) {
+            if (type === 'letter') {
+                return 'abcdefghijklmnopqrstuvwxyz'.charAt(Math.floor(Math.random() * 26));
+            } else if (type === 'number') {
+                return '0123456789'.charAt(Math.floor(Math.random() * 10));
+            } else if (type === 'alphanumeric') {
+                return 'abcdefghijklmnopqrstuvwxyz0123456789'.charAt(Math.floor(Math.random() * 36));
+            }
+            return type; // return as-is for special characters
+        }
+
+        function scrambleString(str) {
+            return str.split('').map(char => {
+                if (/[a-zA-Z]/.test(char)) {
+                    return getRandomChar('letter');
+                } else if (/[0-9]/.test(char)) {
+                    return getRandomChar('number');
+                } else {
+                    return char; // keep special characters as-is
+                }
+            }).join('');
+        }
+
+        function scrambleUrl(url) {
+            try {
+                const urlObj = new URL(url);
+
+                // Always use example.com as the base
+                let scrambledUrl = 'https://example.com';
+
+                // Scramble pathname
+                if (urlObj.pathname && urlObj.pathname !== '/') {
+                    const pathParts = urlObj.pathname.split('/').filter(part => part);
+                    const scrambledParts = pathParts.map(part => scrambleString(part));
+                    scrambledUrl += '/' + scrambledParts.join('/');
+                }
+
+                // Scramble search parameters
+                if (urlObj.search) {
+                    const params = new URLSearchParams(urlObj.search);
+                    const scrambledParams = new URLSearchParams();
+
+                    for (const [key, value] of params) {
+                        const scrambledKey = scrambleString(key);
+                        const scrambledValue = scrambleString(value);
+                        scrambledParams.append(scrambledKey, scrambledValue);
+                    }
+
+                    scrambledUrl += '?' + scrambledParams.toString();
+                }
+
+                // Scramble hash
+                if (urlObj.hash) {
+                    scrambledUrl += '#' + scrambleString(urlObj.hash.substring(1));
+                }
+
+                return scrambledUrl;
+            } catch (e) {
+                // If URL parsing fails, treat as regular text
+                return url;
+            }
+        }
+
+        function scrambleText() {
+            const input = document.getElementById('input').value;
+            if (!input.trim()) {
+                alert('Please enter some text to scramble!');
+                return;
+            }
+
+            // URL regex pattern
+            const urlPattern = /https?:\/\/[^\s]+/g;
+
+            let result = input;
+
+            // First, replace URLs
+            result = result.replace(urlPattern, (match) => {
+                return scrambleUrl(match);
+            });
+
+            // Then replace words (non-URL text)
+            // First identify all URL positions
+            const urlMatches = [];
+            let urlMatch;
+            const urlRegex = /https?:\/\/[^\s]+/g;
+
+            while ((urlMatch = urlRegex.exec(input)) !== null) {
+                urlMatches.push({
+                    start: urlMatch.index,
+                    end: urlMatch.index + urlMatch[0].length
+                });
+            }
+
+            result = result.replace(/\b[a-zA-Z]+\b/g, (match, offset) => {
+                // Check if this word is inside any URL
+                const isInsideUrl = urlMatches.some(url => offset >= url.start && offset < url.end);
+
+                if (isInsideUrl) {
+                    return match; // Don't replace words inside URLs
+                }
+
+                const randomWord = getRandomWord(match.length);
+
+                // Preserve original case pattern
+                if (match === match.toUpperCase()) {
+                    return randomWord.toUpperCase();
+                } else if (match[0] === match[0].toUpperCase()) {
+                    return randomWord.charAt(0).toUpperCase() + randomWord.slice(1).toLowerCase();
+                } else {
+                    return randomWord.toLowerCase();
+                }
+            });
+
+            document.getElementById('output').value = result;
+        }
+
+        function clearAll() {
+            document.getElementById('input').value = '';
+            document.getElementById('output').value = '';
+        }
+
+        // Auto-focus on input when page loads
+        window.onload = function() {
+            document.getElementById('input').focus();
+        };
+    </script>
+</body>
+</html>
