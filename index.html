@@ -1,85 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-    <title>jsf.io</title>
-
-    <link rel="stylesheet" type="text/css" href="neat.css">
-    <link rel="stylesheet" type="text/css" href="custom.css">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSF.IO - Ruby Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
     <script defer data-domain="jsf.io" src="https://plausible.io/js/script.js"></script>
 </head>
+<body class="bg-gray-200 text-gray-900 p-8">
+    <div class="max-w-4xl mx-auto space-y-8">
+        
+        <!-- Header -->
+        <div class="p-6">
+            <!-- <h1 class="text-5xl font-semibold mb-5">JSF.IO</h1> -->
+            <p class="text-gray-800 mb-1 text-2xl font-semibold">Jared Fraser</p>
+            <p class="text-gray-600 mb-4">Ruby on Rails Developer</p>
+            <div class="flex flex-wrap gap-4 text-sm">
+                <span>Auckland, New Zealand</span>
 
-<body>
+                <span><a href="https://github.com/modsognir">github.com/modsognir</a></span>
+                <span><a href="mailto:dev@jsf.io">dev@jsf.io</a></span>
+            </div>
+        </div>
 
-    <a class="home" href="/">JSF</a>
+        <!-- About -->
+        <div class="p-6 pt-0">
+            <p class="text-gray-700 leading-relaxed pb-10">
+                I'm a Ruby on Rails developer with over 15 years of experience building web applications. I focus on writing clean, maintainable code and have a passion for building great user experiences.
+                Specialising in prototypes, back-office software, and data-driven projects.
+            </p>
+            <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1 bg-gray-100 border border-gray-300 text-sm">Ruby on Rails</span>
+                <span class="px-3 py-1 bg-gray-100 border border-gray-300 text-sm">Tailwind</span>
+                <span class="px-3 py-1 bg-gray-100 border border-gray-300 text-sm">JavaScript</span>
+                <span class="px-3 py-1 bg-gray-100 border border-gray-300 text-sm">React</span>
+                <span class="px-3 py-1 bg-gray-100 border border-gray-300 text-sm">Svelte</span>
+                <span class="px-3 py-1 bg-gray-100 border border-gray-300 text-sm">Alpine.js</span>
+                <span class="px-3 py-1 bg-gray-100 border border-gray-300 text-sm">PostgreSQL</span>
+            </div>
+        </div>
+        <!-- Personal Tools -->
+        <div class="p-6">
+            <h2 class="text-xl font-medium mb-4">Tools</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <a href="/tools/sqlite-viewer" class="px-3 py-2 bg-white border border-gray-300 text-sm flex justify-between items-center">
+                    <span>SQLite viewer</span>
+                    <span>-></span>
+                </a>
+                <a href="/tools/csv-viewer" class="px-3 py-2 bg-white border border-gray-300 text-sm flex justify-between items-center">
+                    <span>CSV viewer</span>
+                    <span>-></span>
+                </a>
+                <a href="/tools/diff" class="px-3 py-2 bg-white border border-gray-300 text-sm flex justify-between items-center">
+                    <span>Text diff</span>
+                    <span>-></span>
+                </a>
+                <a href="/tools/markdown" class="px-3 py-2 bg-white border border-gray-300 text-sm flex justify-between items-center">
+                    <span>Markdown editor</span>
+                    <span>-></span>
+                </a>
+                <a href="/tools/svg-symbol-viewer" class="px-3 py-2 bg-white border border-gray-300 text-sm flex justify-between items-center">
+                    <span>SVG symbol viewer</span>
+                    <span>-></span>
+                </a>
+                <a href="/tools/rails-new" class="px-3 py-2 bg-white border border-gray-300 text-sm flex justify-between items-center">
+                    <span><code>rails new</code> &nbsp; command generator</span>
+                    <span>-></span>
+                </a>
+                <a href="/tools/passkeys" class="px-3 py-2 bg-white border border-gray-300 text-sm flex justify-between items-center">
+                    <span>Passkeys tester</span>
+                    <span>-></span>
+                </a>
+            </div>
+        </div>
+        <!-- Projects -->
+        <div class="p-6">
+            <h2 class="text-xl font-medium mb-4">Projects</h2>
+            <div class="space-y-4">
+                
+                <div class="border border-gray-300 bg-white p-4">
+                    <h3 class="font-medium"><a href="https://builders.gg">Builders.gg</a></h3>
+                    <p class="text-sm text-gray-500 mb-2">Destiny 2 Build Aggregator</p>
+                    <p class="text-sm text-gray-600 mb-3">
+                        A web application that aggregates and Destiny 2 character builds, focuses on build sharing and discovery.
+                        Helps players find a build that matches their playstyle and share their own builds with the community.
+                    </p>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span class="px-2 py-1 border border-black"><a href="https://builders.gg">builders.gg -></a></span>
+                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">Ruby on Rails</span>
+                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">PostgreSQL</span>
+                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">Alpine.js</span>
+                    </div>
+                </div>
 
-    <h1>Hi! I'm Jared Fraser.</h1>
+                <div class="border border-gray-300 bg-white p-4">
+                    <h3 class="font-medium"><a href="https://devtrackers.gg">Devtrackers.gg</a></h3>
+                    <p class="text-sm text-gray-500 mb-2">Developer Tracker</p>
+                    <p class="text-sm text-gray-600 mb-3">
+                        Tracks game developer posts on social media to help players keep on top of updates and information.
+                    </p>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span class="px-2 py-1 border border-black"><a href="https://v2.devtrackers.gg">devtrackers.gg -></a></span>
+                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">Ruby on Rails</span>
+                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">PostgreSQL</span>
+                    </div>
+                </div>
 
-    <p> I'm a Ruby Developer based in New Zealand. I specialise in prototypes and data-driven projects.</p>
+                <div class="border border-gray-300 bg-white p-4">
+                    <h3 class="font-medium"><a href="https://osrsvault.com">OSRSVault</a></h3>
+                    <p class="text-sm text-gray-500 mb-2">Old School Runescape Tools</p>
+                    <p class="text-sm text-gray-600 mb-3">
+                        Tools and utilities for Old School Runescape players, providing up to the minute information.
+                    </p>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span class="px-2 py-1 border border-black"><a href="https://osrsvault.com">osrsvault.com -></a></span>
+                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">Ruby on Rails</span>
+                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">PostgreSQL</span>
+                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">Svelte</span>
+                    </div>
+                </div>
 
-    <br>
-    <strong>Contact</strong>
-    <table>
-      <tr>
-        <td>Email</td>
-        <td>&nbsp;<a href="mailto:md@jsf.io">md@jsf.io</a></td>
-      </tr>
-      <tr>
-        <td>Twitter</td>
-        <td>&nbsp;<a href="https://x.com/modsognir">@modsognir</a></td>
-      </tr>
-    </table>
+                <div class="border border-gray-300 bg-white p-4">
+                    <h3 class="font-medium"><a href="https://stormshield.one">Storm Shield One</a></h3>
+                    <p class="text-sm text-gray-500 mb-2">Fortnite Player Stats</p>
+                    <p class="text-sm text-gray-600 mb-2">I built stormshield.one to help me analyse my gameplay and more effectively display information from ingame. At its peak, the site was serving millions of users per month. The site was acquired by ZAM Network in 2018 and shuttered a few months after I departed their team in 2019</p>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">Next.js</span>
+                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">PostgreSQL</span>
+                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">Tailwind</span>
+                    </div>
+                </div>
 
-    <br>
-    <br>
-    <h2>Projects</h2>
-    <br>
+            </div>
+        </div>
 
-    <h3><a href="builders.gg">builders.gg</a></h3>
-    <p><strong>Active</strong> - builders.gg is a build discovery and breakdown tool for Destiny 2.</p>
-    <br>
+        <!-- Ruby Development History -->
+        <div class="p-6">
+            <h2 class="text-xl font-medium mb-4">Ruby Development History</h2>
+            <div class="space-y-4">
+                
+                <div>
+                    <h3 class="font-medium">Freelance Developer</h3>
+                    <p class="text-sm text-gray-600"><a href="https://jsf.nz">jsf.nz</a> • 2019 - Present</p>
+                </div>
 
-    <h3><a href="devtrackers.gg">devtrackers.gg</a></h3>
-    <p><strong>Active</strong> - As a player of many live-service games I often found myself wanting to keep up to day with what the game developers were posting about future plans, game bugs etc. Every game has its own way of communicating to its players. I built devtrackers.gg to aggregate all these sources into one feed for every game.</p>
-    <br>
+                <div>
+                    <h3 class="font-medium">Senior Ruby Developer</h3>
+                    <p class="text-sm text-gray-600">BridgeU • 2018</p>
+                </div>
 
-    <h3><a href="osrsvault.com">osrsvault.com</a></h3>
-    <p><strong>Active</strong> - Tools for Old School Runescape</p>
-    <br>
+                <div>
+                    <h3 class="font-medium">Freelance Developer</h3>
+                    <p class="text-sm text-gray-600">Freelance • 2016 - 2018</p>
+                </div>
 
-    <h3>stormshield.one</h3>
-    <p><strong>Gone - Acquired 2018</strong> - A big fan of Fortnite when it launched, I built stormshield.one to help me analyse my gameplay and more effectively display information from ingame. At its peak, the site was serving millions of users per month. The site was acquired by ZAM Network in 2018 and shuttered a few months after I departed their team in 2019.</p>
-    <br>
-    <br>
+                <div>
+                    <h3 class="font-medium">Contract Ruby Developer</h3>
+                    <p class="text-sm text-gray-600">Cogent • 2015 - 2016</p>
+                </div>
 
+                <div>
+                    <h3 class="font-medium">Senior Ruby Developer</h3>
+                    <p class="text-sm text-gray-600">Money Advice Service • 2013 - 2015</p>
+                </div>
 
-    <h2>Ruby Development History</h2>
+                <div>
+                    <h3 class="font-medium">Senior Ruby Developer</h3>
+                    <p class="text-sm text-gray-600">Australian Medical Council • 2009 - 2012</p>
+                </div>
 
-    <strong> 2019-2024 </strong><a href="https://jsf.nz/">jsf.nz</a> (freelance)<br>
-    <strong> 2018-2018 </strong><a href="https://bridge-u.com/">BridgeU</a><br>
-    <strong> 2016-2018 </strong>Freelance<br>
-    <strong> 2015-2016 </strong><a href="https://www.linkedin.com/company/cogentco/posts/?feedView=all">Cogent</a><br>
-    <strong> 2013-2015 </strong><a href="https://www.moneyhelper.org.uk/en">Money Advice Service</a><br>
-    <strong> 2009-2012 </strong><a href="https://www.amc.org.au">Australian Medical Council</a><br>
-    <br>
+            </div>
+        </div>
 
+        <!-- Contact -->
+        <div class="p-6">
+            <h2 class="text-xl font-medium mb-4">Contact</h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <p><strong>Email:</strong> dev@jsf.io</p>
+                    <p><strong>Github:</strong> <a href="https://github.com/modsognir">github.com/modsognir</a></p>
+                </div>
+                <div>
+                    <form class="space-y-3">
+                        <textarea placeholder="Message" rows="3" id="contact-message" onchange="composeEmail()" class="w-full p-2 border border-gray-300 focus:outline-none focus:border-black"></textarea>
+                        <a class="block text-center send-mail w-full p-2 bg-black text-white hover:bg-gray-800 transition-colors">Send</a>
+                    </form>
+                    <script>
+                        function composeEmail() {
+                            const message = document.getElementById('contact-message').value;
+                            
+                            const subject = `Contact from website`;
+                            const body = `${message}`;
+                            
+                            const email = `mailto:dev@jsf.io?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                            document.querySelector('.send-mail').href = email;
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
 
-    <h2>Personal tools</h2>
-    <p>Small, one-off tools i've built when i've needed them </p>
-    <ul>
-      <li><a href="./tools/sqlite-viewer.html">SQLite viewer</a></li>
-      <li><a href="./tools/csv-viewer.html">CSV viewer</a></li>
-      <li><a href="./tools/diff.html">Text diff</a></li>
-      <li><a href="./tools/markdown.html">Markdown editor</a></li>
-      <li><a href="./tools/svg-symbol-viewer.html">SVG symbol viewer</a></li>
-      <li><a href="./tools/rails-new.html"><code>rails new</code> command generator</a></li>
-      <li><a href="./tools/passkeys.html">Passkeys tester</a></li>
-    </ul>
+    </div>
 
-
+    <script>
+        // Simple form handling
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const button = this.querySelector('button');
+            const originalText = button.textContent;
+            
+            button.textContent = 'Sent!';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.disabled = false;
+                this.reset();
+            }, 2000);
+        });
+    </script>
 </body>
 </html>
