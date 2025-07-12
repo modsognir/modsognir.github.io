@@ -5,239 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SQLite Database Viewer</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
-    <link rel="stylesheet" type="text/css" href="../custom.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script defer data-domain="jsf.io" src="https://plausible.io/js/script.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+        
         * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-            color: #333;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-        }
-
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .drop-zone {
-            border: 3px dashed #667eea;
-            border-radius: 15px;
-            padding: 60px;
-            text-align: center;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
-            margin-bottom: 30px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .drop-zone::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-            transform: rotate(45deg);
-            transition: all 0.5s ease;
-            opacity: 0;
-        }
-
-        .drop-zone:hover::before {
-            opacity: 1;
-            animation: shimmer 2s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) rotate(45deg); }
-        }
-
-        .drop-zone.dragover {
-            border-color: #764ba2;
-            background: linear-gradient(135deg, rgba(118, 75, 162, 0.1), rgba(102, 126, 234, 0.1));
-            transform: scale(1.02);
-        }
-
-        .drop-zone p {
-            margin: 0;
-            font-size: 1.3em;
-            color: #666;
-            position: relative;
-            z-index: 1;
-        }
-
-        .drop-zone .icon {
-            font-size: 4em;
-            margin-bottom: 20px;
-            display: block;
-            color: #667eea;
-        }
-
-        .file-input {
-            display: none;
-        }
-
-        .db-info {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            border-left: 5px solid #667eea;
-        }
-
-        .table-selector {
-            margin-bottom: 20px;
-        }
-
-        .table-selector select {
-            padding: 12px 20px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 200px;
-        }
-
-        .table-selector select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .table-container {
-            margin-bottom: 30px;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .table-header {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 15px 20px;
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-
-        .table-wrapper {
-            max-height: 3000px;
-            overflow: auto;
-            background: white;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        th {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            padding: 12px 8px;
-            text-align: left;
-            font-weight: 600;
-            color: #495057;
-            border-bottom: 2px solid #dee2e6;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        td {
-            padding: 10px 8px;
-            border-bottom: 1px solid #f1f3f4;
-            transition: background-color 0.2s ease;
-        }
-
-        tr:hover td {
-            background-color: rgba(102, 126, 234, 0.05);
-        }
-
-        tr:nth-child(even) td {
-            background-color: #fafbfc;
-        }
-
-        tr:nth-child(even):hover td {
-            background-color: rgba(102, 126, 234, 0.08);
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-            font-size: 1.1em;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .error {
-            background: linear-gradient(135deg, #ff6b6b, #ff5252);
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .row-count {
-            color: #666;
-            font-size: 0.9em;
-            margin-top: 10px;
-            padding: 10px;
+            font-family: 'Inter', sans-serif;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>🗃️ SQLite Database Viewer</h1>
-
-        <div class="drop-zone" id="dropZone">
-            <span class="icon">📁</span>
-            <p>Drag & drop your SQLite file here or click to browse</p>
-            <input type="file" class="file-input" id="fileInput" accept=".db,.sqlite,.sqlite3">
+<body class="bg-gray-200 text-gray-900 p-8">
+    <div class="max-w-7xl mx-auto space-y-8">
+        
+        <!-- Header -->
+        <div class="p-6">
+            <h1 class="text-3xl font-semibold mb-2">🗃️ SQLite Database Viewer</h1>
+            <p class="text-gray-600">Upload and view SQLite database files in your browser</p>
         </div>
 
+        <!-- Drop Zone -->
+        <div class="p-6">
+            <div class="border-2 border-dashed border-gray-400 rounded-lg p-12 text-center cursor-pointer hover:border-gray-600 transition-colors" id="dropZone">
+                <div class="text-6xl mb-4">📁</div>
+                <p class="text-gray-600 text-lg">Drag & drop your SQLite file here or click to browse</p>
+                <input type="file" class="hidden" id="fileInput" accept=".db,.sqlite,.sqlite3">
+            </div>
+        </div>
+
+        <!-- Content Area -->
         <div id="content"></div>
+
     </div>
 
     <script>
@@ -250,7 +48,7 @@
             SQL = sql;
         }).catch(err => {
             document.getElementById('content').innerHTML =
-                '<div class="error">Failed to load SQLite library. Please refresh the page.</div>';
+                '<div class="p-6"><div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">Failed to load SQLite library. Please refresh the page.</div></div>';
         });
 
         const dropZone = document.getElementById('dropZone');
@@ -261,16 +59,16 @@
 
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
-            dropZone.classList.add('dragover');
+            dropZone.classList.add('border-gray-600', 'bg-gray-50');
         });
 
         dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('dragover');
+            dropZone.classList.remove('border-gray-600', 'bg-gray-50');
         });
 
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
-            dropZone.classList.remove('dragover');
+            dropZone.classList.remove('border-gray-600', 'bg-gray-50');
             const files = e.dataTransfer.files;
             if (files.length > 0) {
                 handleFile(files[0]);
@@ -285,11 +83,11 @@
 
         function handleFile(file) {
             if (!SQL) {
-                content.innerHTML = '<div class="error">SQLite library not loaded yet. Please try again.</div>';
+                content.innerHTML = '<div class="p-6"><div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">SQLite library not loaded yet. Please try again.</div></div>';
                 return;
             }
 
-            content.innerHTML = '<div class="loading"><span class="spinner"></span>Loading database...</div>';
+            content.innerHTML = '<div class="p-6"><div class="text-center text-gray-600"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mb-2"></div><p>Loading database...</p></div></div>';
 
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -305,12 +103,12 @@
 
                     displayDatabase();
                 } catch (error) {
-                    content.innerHTML = `<div class="error">Error loading database: ${error.message}</div>`;
+                    content.innerHTML = `<div class="p-6"><div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">Error loading database: ${error.message}</div></div>`;
                 }
             };
 
             reader.onerror = function() {
-                content.innerHTML = '<div class="error">Error reading file.</div>';
+                content.innerHTML = '<div class="p-6"><div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">Error reading file.</div></div>';
             };
 
             reader.readAsArrayBuffer(file);
@@ -321,21 +119,22 @@
                 const tables = db.exec("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'");
 
                 if (!tables.length || !tables[0].values.length) {
-                    content.innerHTML = '<div class="error">No tables found in the database.</div>';
+                    content.innerHTML = '<div class="p-6"><div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">No tables found in the database.</div></div>';
                     return;
                 }
 
                 const tableNames = tables[0].values.map(row => row[0]);
 
-                let html = '<div class="db-info">';
-                html += `<h3>Database Information</h3>`;
-                html += `<p><strong>Tables found:</strong> ${tableNames.length}</p>`;
-                html += `<p><strong>Table names:</strong> ${tableNames.join(', ')}</p>`;
+                let html = '<div class="p-6">';
+                html += '<div class="bg-white border border-gray-300 p-4 mb-6">';
+                html += '<h3 class="font-medium mb-2">Database Information</h3>';
+                html += `<p class="text-sm text-gray-600 mb-1"><strong>Tables found:</strong> ${tableNames.length}</p>`;
+                html += `<p class="text-sm text-gray-600"><strong>Table names:</strong> ${tableNames.join(', ')}</p>`;
                 html += '</div>';
 
-                html += '<div class="table-selector">';
-                html += '<label for="tableSelect"><strong>Select table to view:</strong></label><br><br>';
-                html += '<select id="tableSelect">';
+                html += '<div class="mb-6">';
+                html += '<label for="tableSelect" class="block text-sm font-medium text-gray-700 mb-2">Select table to view:</label>';
+                html += '<select id="tableSelect" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-black">';
                 html += '<option value="">-- Select a table --</option>';
                 tableNames.forEach(tableName => {
                     html += `<option value="${tableName}">${tableName}</option>`;
@@ -344,6 +143,7 @@
                 html += '</div>';
 
                 html += '<div id="tableDisplay"></div>';
+                html += '</div>';
 
                 content.innerHTML = html;
 
@@ -356,42 +156,44 @@
                 });
 
             } catch (error) {
-                content.innerHTML = `<div class="error">Error reading database: ${error.message}</div>`;
+                content.innerHTML = `<div class="p-6"><div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">Error reading database: ${error.message}</div></div>`;
             }
         }
 
         function displayTable(tableName) {
             try {
                 const tableDisplay = document.getElementById('tableDisplay');
-                tableDisplay.innerHTML = '<div class="loading"><span class="spinner"></span>Loading table data...</div>';
+                tableDisplay.innerHTML = '<div class="text-center text-gray-600"><div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mb-2"></div><p>Loading table data...</p></div>';
 
                 const result = db.exec(`SELECT * FROM "${tableName}" LIMIT 1000`);
 
                 if (!result.length) {
-                    tableDisplay.innerHTML = `<div class="error">Table "${tableName}" is empty or could not be read.</div>`;
+                    tableDisplay.innerHTML = `<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">Table "${tableName}" is empty or could not be read.</div>`;
                     return;
                 }
 
                 const columns = result[0].columns;
                 const values = result[0].values;
 
-                let html = '<div class="table-container">';
-                html += `<div class="table-header">Table: ${tableName}</div>`;
-                html += '<div class="table-wrapper">';
-                html += '<table>';
+                let html = '<div class="border border-gray-300 bg-white mb-4">';
+                html += `<div class="bg-gray-100 border-b border-gray-300 p-3 font-medium">Table: ${tableName}</div>`;
+                html += '<div class="overflow-x-auto">';
+                html += '<table class="w-full text-sm">';
 
-                html += '<thead><tr>';
+                html += '<thead class="bg-gray-50">';
+                html += '<tr>';
                 columns.forEach(col => {
-                    html += `<th>${escapeHtml(col)}</th>`;
+                    html += `<th class="p-3 text-left font-medium text-gray-700 border-b border-gray-200">${escapeHtml(col)}</th>`;
                 });
-                html += '</tr></thead>';
+                html += '</tr>';
+                html += '</thead>';
 
                 html += '<tbody>';
-                values.forEach(row => {
-                    html += '<tr>';
+                values.forEach((row, index) => {
+                    html += `<tr class="${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100">`;
                     row.forEach(cell => {
-                        const cellValue = cell === null ? '<em>NULL</em>' : escapeHtml(String(cell));
-                        html += `<td>${cellValue}</td>`;
+                        const cellValue = cell === null ? '<em class="text-gray-400">NULL</em>' : escapeHtml(String(cell));
+                        html += `<td class="p-3 border-b border-gray-200">${cellValue}</td>`;
                     });
                     html += '</tr>';
                 });
@@ -399,14 +201,14 @@
 
                 html += '</table>';
                 html += '</div>';
-                html += `<div class="row-count">Showing ${values.length} rows${values.length === 1000 ? ' (limited to first 1000)' : ''}</div>`;
+                html += `<div class="p-3 text-sm text-gray-500 bg-gray-50 border-t border-gray-200">Showing ${values.length} rows${values.length === 1000 ? ' (limited to first 1000)' : ''}</div>`;
                 html += '</div>';
 
                 tableDisplay.innerHTML = html;
 
             } catch (error) {
                 document.getElementById('tableDisplay').innerHTML =
-                    `<div class="error">Error displaying table: ${error.message}</div>`;
+                    `<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">Error displaying table: ${error.message}</div>`;
             }
         }
 
