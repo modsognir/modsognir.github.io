@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Cost Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-200 text-gray-900 p-8">
+    <div class="max-w-6xl mx-auto space-y-8">
+        
+        <!-- Header -->
+        <div class="p-6">
+            <p class="text-gray-800 mb-1 text-2xl font-semibold">AI Cost Calculator</p>
+            <p class="text-gray-600 mb-4">Calculate token costs across different AI models</p>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Model Selection Table -->
+            <div class="p-6">
+                <h2 class="text-xl font-medium mb-4">Select AI Model</h2>
+                <div class="bg-white border border-gray-300">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="bg-gray-100 border-b border-gray-300">
+                                    <th class="text-left py-3 px-4 font-medium text-gray-700">Model</th>
+                                    <th class="text-left py-3 px-4 font-medium text-gray-700">Operator</th>
+                                    <th class="text-right py-3 px-4 font-medium text-gray-700">Input</th>
+                                    <th class="text-right py-3 px-4 font-medium text-gray-700">Cache</th>
+                                    <th class="text-right py-3 px-4 font-medium text-gray-700">Output</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modelTable">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">Prices per million tokens</p>
+            </div>
+
+            <!-- Cost Calculator -->
+            <div class="p-6">
+                <h2 class="text-xl font-medium mb-4">Calculate Cost</h2>
+                
+                <!-- Selected Model Display -->
+                <div class="bg-white border border-gray-300 p-4 mb-6">
+                    <div id="selectedModel" class="text-gray-600 text-sm">
+                        Click on a model from the table to select it
+                    </div>
+                </div>
+
+                <!-- Token Input Fields -->
+                <div class="mb-6">
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Token Counts</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs text-gray-600 mb-1">Input Tokens</label>
+                            <input 
+                                type="number" 
+                                id="inputTokens" 
+                                placeholder="0"
+                                value="0"
+                                class="w-full p-2 border border-gray-300 focus:outline-none focus:border-black text-sm"
+                            >
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs text-gray-600 mb-1">Output Tokens</label>
+                            <input 
+                                type="number" 
+                                id="outputTokens" 
+                                placeholder="0"
+                                value="0"
+                                class="w-full p-2 border border-gray-300 focus:outline-none focus:border-black text-sm"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cost Override Fields -->
+                <div class="mb-6">
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Costs (per million tokens)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs text-gray-600 mb-1">Input Cost ($)</label>
+                            <input 
+                                type="number" 
+                                step="0.001"
+                                id="inputCostField" 
+                                placeholder="0"
+                                value="0"
+                                class="w-full p-2 border border-gray-300 focus:outline-none focus:border-black text-sm"
+                            >
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs text-gray-600 mb-1">Output Cost ($)</label>
+                            <input 
+                                type="number" 
+                                step="0.001"
+                                id="outputCostField" 
+                                placeholder="0"
+                                value="0"
+                                class="w-full p-2 border border-gray-300 focus:outline-none focus:border-black text-sm"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cost Breakdown -->
+                <div class="bg-white border border-gray-300 p-4">
+                    <h3 class="font-medium text-gray-800 mb-4">Cost Breakdown</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Input Cost:</span>
+                            <span id="inputCostDisplay" class="font-medium text-gray-900">$0.00</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Output Cost:</span>
+                            <span id="outputCostDisplay" class="font-medium text-gray-900">$0.00</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-3 border-t border-gray-300">
+                            <span class="font-semibold text-gray-800">Total Cost:</span>
+                            <span id="totalCostDisplay" class="font-semibold text-xl text-black">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // AI Model data with pricing per million tokens
+        let models = [];
+        let selectedModel = null;
+        let updateInfo = {};
+        let sortedModels = [];
+
+        // Fetch model data from external JSON file
+        async function fetchModelData() {
+            try {
+                const response = await fetch('https://data-82e4.onrender.com/ai/model-costs.json?100000');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                models = data.models || [];
+                updateInfo = data.updated || {};
+                
+                // Populate the model table with fetched data
+                populateModelTable();
+                
+                // Add update info to the header if available
+                if (Object.keys(updateInfo).length > 0) {
+                    displayUpdateInfo();
+                }
+            } catch (error) {
+                console.error('Error fetching model data:', error);
+                // Fallback to default models if fetch fails
+                models = [
+                    {
+                        name: "Claude 3 Haiku",
+                        provider: "Anthropic",
+                        input_price: 0.25,
+                        cache_price: 0.03,
+                        output_price: 1.25
+                    },
+                    {
+                        name: "Claude 3.5 Sonnet",
+                        provider: "Anthropic",
+                        input_price: 3.00,
+                        cache_price: 0.30,
+                        output_price: 15.00
+                    },
+                    {
+                        name: "Claude 3 Opus",
+                        provider: "Anthropic",
+                        input_price: 15.00,
+                        cache_price: 1.50,
+                        output_price: 75.00
+                    },
+                    {
+                        name: "GPT-4o",
+                        provider: "OpenAI",
+                        input_price: 2.50,
+                        cache_price: 1.25,
+                        output_price: 10.00
+                    },
+                    {
+                        name: "GPT-4o Mini",
+                        provider: "OpenAI",
+                        input_price: 0.15,
+                        cache_price: 0.075,
+                        output_price: 0.60
+                    },
+                    {
+                        name: "GPT-4 Turbo",
+                        provider: "OpenAI",
+                        input_price: 10.00,
+                        cache_price: 5.00,
+                        output_price: 30.00
+                    },
+                    {
+                        name: "Gemini 1.5 Pro",
+                        provider: "Google",
+                        input_price: 1.25,
+                        cache_price: 0.0625,
+                        output_price: 5.00
+                    },
+                    {
+                        name: "Gemini 1.5 Flash",
+                        provider: "Google",
+                        input_price: 0.075,
+                        cache_price: 0.01875,
+                        output_price: 0.30
+                    }
+                ];
+                populateModelTable();
+            }
+        }
+
+        // Display update information
+        function displayUpdateInfo() {
+            const header = document.querySelector('.p-6');
+            if (header && Object.keys(updateInfo).length > 0) {
+                const updateDiv = document.createElement('div');
+                updateDiv.className = 'text-xs text-gray-500 mt-2';
+                
+                const updateText = Object.entries(updateInfo)
+                    .map(([operator, date]) => `${operator}: ${date}`)
+                    .join(' | ');
+                
+                updateDiv.textContent = `Last updated: ${updateText}`;
+                header.appendChild(updateDiv);
+            }
+        }
+
+        // Populate the model table
+        function populateModelTable() {
+            const tableBody = document.getElementById('modelTable');
+            tableBody.innerHTML = '';
+
+            // Sort models by output price (ascending)
+            sortedModels = [...models].sort((a, b) => {
+                const aPrice = a.output_price === "N/A" ? 0 : parseFloat(a.output_price);
+                const bPrice = b.output_price === "N/A" ? 0 : parseFloat(b.output_price);
+                return bPrice - aPrice;
+            });
+
+            sortedModels.forEach((model, index) => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-gray-200 hover:bg-gray-50 cursor-pointer transition-colors';
+                row.onclick = () => selectModel(sortedModels.indexOf(model));
+
+                console.log(model);
+                if (model.input_price == "N/A") model.input_price = 0;
+                if (model.cache_price == "N/A") model.cache_price = 0;
+                if (model.output_price == "N/A") model.output_price = 0;
+                
+                row.innerHTML = `
+                    <td class="py-3 px-4 font-medium text-gray-900">${model.name}</td>
+                    <td class="py-3 px-4 text-gray-600 text-sm">${model.provider}</td>
+                    <td class="py-3 px-4 text-right text-gray-900 text-sm">$${model.input_price.toFixed(2)}</td>
+                    <td class="py-3 px-4 text-right text-gray-900 text-sm">$${(model.cache_price || 0).toFixed(3)}</td>
+                    <td class="py-3 px-4 text-right text-gray-900 text-sm">$${model.output_price.toFixed(2)}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Select a model
+        function selectModel(index) {
+            selectedModel = sortedModels[index];
+            
+            // Update visual selection
+            const rows = document.querySelectorAll('#modelTable tr');
+            rows.forEach(row => {
+                row.classList.remove('bg-gray-100', 'border-l-4', 'border-l-black');
+            });
+            rows[index].classList.add('bg-gray-100', 'border-l-4', 'border-l-black');
+            
+            // Update selected model display
+            document.getElementById('selectedModel').innerHTML = `
+                <div class="font-medium text-gray-900">${selectedModel.name}</div>
+                <div class="text-sm text-gray-600">${selectedModel.provider}</div>
+            `;
+            
+            // Fill the cost fields with the selected model's costs
+            document.getElementById('inputCostField').value = selectedModel.input_price;
+            document.getElementById('outputCostField').value = selectedModel.output_price;
+            
+            // Recalculate costs
+            calculateCosts();
+        }
+
+        // Calculate costs
+        function calculateCosts() {
+            const inputTokens = parseInt(document.getElementById('inputTokens').value) || 0;
+            const outputTokens = parseInt(document.getElementById('outputTokens').value) || 0;
+
+            let inputCostRate, outputCostRate;
+
+            if (selectedModel) {
+                inputCostRate = selectedModel.input_price;
+            } else {
+                inputCostRate = 0;
+            }
+
+            if (selectedModel) {
+                outputCostRate = selectedModel.output_price;
+            } else {
+                outputCostRate = 0;
+            }
+
+            // Calculate costs (pricing is per million tokens)
+            const inputCost = (inputTokens / 1000000) * inputCostRate;
+            const outputCost = (outputTokens / 1000000) * outputCostRate;
+            const totalCost = inputCost + outputCost;
+
+            // Format costs for display
+            const formatCost = (cost) => {
+                if (cost === 0) return '$0.00';
+                if (cost < 0.01) return `${cost.toFixed(6)}`;
+                return `${cost.toFixed(4)}`;
+            };
+
+            // Update display
+            document.getElementById('inputCostDisplay').textContent = formatCost(inputCost);
+            document.getElementById('outputCostDisplay').textContent = formatCost(outputCost);
+            document.getElementById('totalCostDisplay').textContent = formatCost(totalCost);
+        }
+
+        // Add event listeners for real-time calculation
+        document.getElementById('inputTokens').addEventListener('input', calculateCosts);
+        document.getElementById('outputTokens').addEventListener('input', calculateCosts);
+        document.getElementById('inputCostField').addEventListener('input', calculateCosts);
+        document.getElementById('outputCostField').addEventListener('input', calculateCosts);
+
+        // Initialize the application by fetching model data
+        fetchModelData();
+    </script>
+</body>
+</html>
