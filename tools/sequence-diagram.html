@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Sequence Diagram Visualizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        .main-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .content-area {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+        .editor-panel {
+            width: 33.333%;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #e5e7eb;
+        }
+        .preview-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f9fafb;
+        }
+        #editor {
+            font-family: 'Courier New', monospace;
+            resize: none;
+            flex: 1;
+            border: none;
+            outline: none;
+        }
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .error-message {
+            background: #FEE2E2;
+            color: #991B1B;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 20px;
+        }
+        @media (max-width: 768px) {
+            .content-area {
+                flex-direction: column;
+            }
+            .editor-panel {
+                width: 100%;
+                height: 40%;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="bg-gray-800 text-white px-6 py-3 flex items-center justify-between">
+            <h1 class="text-xl font-semibold">Markdown Sequence Diagram Visualizer</h1>
+            <div class="flex gap-2">
+                <button onclick="loadExample()" class="px-4 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm">
+                    Load Example
+                </button>
+                <button onclick="clearEditor()" class="px-4 py-1.5 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors text-sm">
+                    Clear
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="content-area">
+            <!-- Editor Panel -->
+            <div class="editor-panel bg-white">
+                <div class="bg-gray-50 px-4 py-2 border-b border-gray-200">
+                    <h2 class="text-sm font-semibold text-gray-700">Markdown Input</h2>
+                </div>
+                <textarea 
+                    id="editor"
+                    class="p-4 bg-white"
+                    placeholder="Enter your sequence diagram in Markdown format...
+
+Example:
+```mermaid
+sequenceDiagram
+    Alice->>Bob: Hello Bob!
+    Bob-->>Alice: Hi Alice!
+```"
+                ></textarea>
+                <div class="bg-gray-50 p-4 border-t border-gray-200 text-xs text-gray-600">
+                    <p class="font-semibold mb-1">Quick Reference:</p>
+                    <div class="space-y-0.5">
+                        <div><code>-&gt;&gt;</code> solid arrow</div>
+                        <div><code>--&gt;&gt;</code> dashed arrow</div>
+                        <div><code>Note over A,B: text</code></div>
+                        <div><code>alt/else/end</code> conditionals</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Preview Panel -->
+            <div class="preview-panel">
+                <div class="bg-white px-4 py-2 border-b border-gray-200">
+                    <h2 class="text-sm font-semibold text-gray-700">Diagram Preview</h2>
+                </div>
+                <div id="preview" class="overflow-y-scroll">
+                    <p class="text-gray-500 p-6">Enter Markdown to see the diagram</p>
+                </div>
+                <div id="error-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize mermaid with specific configuration
+        window.addEventListener('load', function() {
+            mermaid.initialize({ 
+                startOnLoad: false,
+                theme: 'default',
+                logLevel: 'error',
+                securityLevel: 'loose',
+                flowchart: {
+                    useMaxWidth: true,
+                    htmlLabels: true
+                },
+                sequence: {
+                    diagramMarginX: 50,
+                    diagramMarginY: 10,
+                    actorMargin: 50,
+                    width: 150,
+                    height: 65,
+                    boxMargin: 10,
+                    boxTextMargin: 5,
+                    noteMargin: 10,
+                    messageMargin: 35,
+                    mirrorActors: true,
+                    bottomMarginAdj: 1,
+                    useMaxWidth: true,
+                    rightAngles: false,
+                    showSequenceNumbers: false
+                }
+            });
+        });
+
+        const editor = document.getElementById('editor');
+        const preview = document.getElementById('preview');
+        const errorContainer = document.getElementById('error-container');
+        let renderTimeout;
+        let renderCounter = 0;
+
+        // Extract mermaid code from markdown
+        function extractMermaidCode(markdown) {
+            const mermaidRegex = /```mermaid\s*([\s\S]*?)```/g;
+            const matches = [...markdown.matchAll(mermaidRegex)];
+            
+            if (matches.length > 0) {
+                return matches.map(match => match[1].trim());
+            }
+            
+            // If no mermaid blocks found, try to parse as direct sequence diagram
+            if (markdown.includes('sequenceDiagram') || 
+                markdown.includes('->') || 
+                markdown.includes('--')) {
+                return [markdown.trim()];
+            }
+            
+            return [];
+        }
+
+        // Render the diagram
+        async function renderDiagram() {
+            const markdown = editor.value;
+            const mermaidCodes = extractMermaidCode(markdown);
+            
+            errorContainer.innerHTML = '';
+            
+            if (mermaidCodes.length === 0) {
+                preview.innerHTML = '<p class="text-gray-500">No sequence diagram found. Wrap your diagram in ```mermaid blocks.</p>';
+                return;
+            }
+            
+            preview.innerHTML = '';
+            
+            for (let i = 0; i < mermaidCodes.length; i++) {
+                let code = mermaidCodes[i];
+                
+                // Ensure the code starts with sequenceDiagram if it doesn't already
+                if (!code.trim().startsWith('sequenceDiagram')) {
+                    code = 'sequenceDiagram\n' + code;
+                }
+                
+                // Create a unique ID for this render
+                renderCounter++;
+                const graphId = `mermaid-graph-${renderCounter}`;
+                
+                // Create container div
+                const containerDiv = document.createElement('div');
+                containerDiv.className = 'mermaid-container mb-4';
+                
+                try {
+                    // Use mermaid.render with a unique ID
+                    const renderResult = await mermaid.render(graphId, code);
+                    
+                    // Create a div and insert the SVG
+                    const div = document.createElement('div');
+                    div.className = 'mermaid';
+                    div.innerHTML = renderResult.svg;
+                    
+                    containerDiv.appendChild(div);
+                    preview.appendChild(containerDiv);
+                } catch (error) {
+                    console.error('Mermaid rendering error:', error);
+                    
+                    // Try alternative rendering method
+                    try {
+                        const div = document.createElement('div');
+                        div.className = 'mermaid';
+                        div.textContent = code;
+                        containerDiv.appendChild(div);
+                        preview.appendChild(containerDiv);
+                        
+                        // Try to use mermaid.init
+                        await mermaid.init(undefined, div);
+                    } catch (secondError) {
+                        console.error('Alternative rendering also failed:', secondError);
+                        
+                        let errorMessage = 'Failed to render diagram. ';
+                        if (error.message) {
+                            errorMessage += error.message;
+                        } else {
+                            errorMessage += 'Please check your syntax.';
+                        }
+                        
+                        errorContainer.innerHTML = `<div class="error-message">
+                            <strong>Error:</strong> ${errorMessage}
+                            <br><small class="text-xs mt-2 block">Tip: Make sure your syntax follows the mermaid sequence diagram format.</small>
+                        </div>`;
+                        
+                        containerDiv.remove();
+                    }
+                }
+            }
+            
+            if (preview.children.length === 0 && !errorContainer.innerHTML) {
+                preview.innerHTML = '<p class="text-gray-500">Unable to render diagram. Please check your syntax.</p>';
+            }
+        }
+
+        // Debounced render on input
+        editor.addEventListener('input', () => {
+            clearTimeout(renderTimeout);
+            renderTimeout = setTimeout(renderDiagram, 800);
+        });
+
+        // Load example
+        function loadExample() {
+            editor.value = `# Simple Sequence Diagram
+
+\`\`\`mermaid
+sequenceDiagram
+    Alice->>John: Hello John, how are you?
+    John-->>Alice: Great!
+    Alice-)John: See you later!
+\`\`\`
+
+# Authentication Flow
+
+\`\`\`mermaid
+sequenceDiagram
+    participant User
+    participant Browser
+    participant Server
+    participant Database
+    
+    User->>Browser: Enter credentials
+    Browser->>Server: POST /login
+    Note over Server: Validate input
+    Server->>Database: Query user
+    Database-->>Server: User data
+    
+    alt Valid credentials
+        Server->>Server: Generate token
+        Server-->>Browser: 200 OK
+        Browser-->>User: Show dashboard
+    else Invalid credentials
+        Server-->>Browser: 401 Error
+        Browser-->>User: Show error
+    end
+\`\`\``;
+            setTimeout(renderDiagram, 100);
+        }
+
+        // Clear editor
+        function clearEditor() {
+            editor.value = '';
+            preview.innerHTML = '<p class="text-gray-500">Enter Markdown to see the diagram</p>';
+            errorContainer.innerHTML = '';
+        }
+
+        // Test mermaid is loaded
+        window.addEventListener('load', () => {
+            if (typeof mermaid === 'undefined') {
+                errorContainer.innerHTML = '<div class="error-message">Failed to load Mermaid library. Please refresh the page.</div>';
+            }
+        });
+    </script>
+</body>
+</html>
