@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clipboard to HTML Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280; 
+        }
+
+        .paste-zone-active {
+            border-color: #3b82f6;
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+    </style>
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="5573b652-b7a1-4212-a205-ec9d4af9d4f3"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 h-screen flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header class="border-b border-gray-700 bg-gray-800 p-4 flex justify-between items-center shrink-0">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <i class="fa-solid fa-code text-white text-lg"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-lg tracking-tight">Rich Text to HTML</h1>
+                <p class="text-xs text-gray-400">Paste formatted content to extract clean HTML</p>
+            </div>
+        </div>
+        
+        <div class="flex gap-3">
+             <button onclick="resetApp()" class="px-3 py-1.5 text-sm text-gray-400 hover:text-white transition-colors">
+                Clear All
+            </button>
+            <a href="https://github.com" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                <i class="fa-brands fa-github text-xl"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col md:flex-row overflow-hidden">
+        
+        <!-- Left Panel: Visual Input/Preview -->
+        <div class="flex-1 flex flex-col border-r border-gray-700 min-w-0">
+            <div class="bg-gray-800/50 border-b border-gray-700 p-3 flex justify-between items-center shrink-0">
+                <span class="text-sm font-medium text-gray-300 flex items-center gap-2">
+                    <i class="fa-regular fa-eye text-gray-500"></i> Visual Preview / Paste Zone
+                </span>
+                <span class="text-xs text-gray-500 bg-gray-800 px-2 py-1 rounded border border-gray-700">
+                    Click below & Press Ctrl+V
+                </span>
+            </div>
+            
+            <!-- Paste Target -->
+            <div id="pasteTarget" 
+                 contenteditable="true" 
+                 class="flex-1 p-6 outline-none overflow-y-auto bg-gray-900 text-gray-200 prose prose-invert max-w-none focus:bg-gray-800/30 transition-colors"
+                 data-placeholder="Click here and paste (Ctrl+V) content from Word, Excel, or any website..."
+            ></div>
+        </div>
+
+        <!-- Right Panel: Code Output -->
+        <div class="flex-1 flex flex-col min-w-0 bg-[#0d1117]">
+            <!-- Toolbar -->
+            <div class="bg-gray-800 border-b border-gray-700 p-2 flex flex-wrap gap-2 items-center justify-between shrink-0">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-medium text-gray-300 px-2">
+                        <i class="fa-solid fa-terminal text-gray-500 mr-1"></i> Source
+                    </span>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <!-- Cleaning Options -->
+                    <div class="flex bg-gray-900 rounded-lg border border-gray-700 p-0.5">
+                        <button onclick="toggleCleaner('attributes')" id="btnAttr" class="px-3 py-1.5 text-xs font-medium rounded-md transition-all text-gray-400 hover:text-white">
+                            No Attributes
+                        </button>
+                        <button onclick="toggleCleaner('classes')" id="btnClass" class="px-3 py-1.5 text-xs font-medium rounded-md transition-all text-gray-400 hover:text-white">
+                            No Classes
+                        </button>
+                        <button onclick="toggleCleaner('styles')" id="btnStyle" class="px-3 py-1.5 text-xs font-medium rounded-md transition-all text-gray-400 hover:text-white">
+                            No Styles
+                        </button>
+                    </div>
+
+                    <div class="h-4 w-px bg-gray-700 mx-1"></div>
+
+                    <button onclick="copyToClipboard()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-1.5 rounded-md text-xs font-medium transition-colors flex items-center gap-2 shadow-lg shadow-blue-900/20">
+                        <i class="fa-regular fa-copy"></i> Copy HTML
+                    </button>
+                </div>
+            </div>
+
+            <!-- Code Display -->
+            <div class="relative flex-1 overflow-hidden">
+                <textarea id="codeOutput" readonly spellcheck="false" 
+                    class="w-full h-full bg-[#0d1117] text-blue-100 p-4 code-font text-sm resize-none outline-none border-none"></textarea>
+                
+                <!-- Status Toast -->
+                <div id="toast" class="absolute bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2 z-10">
+                    <i class="fa-solid fa-check-circle"></i>
+                    <span id="toastMsg">Copied!</span>
+                </div>
+            </div>
+            
+            <!-- Stats Footer -->
+            <div class="bg-gray-800 border-t border-gray-700 px-4 py-1 text-xs text-gray-500 flex justify-between">
+                <span id="charCount">0 chars</span>
+                <span id="tagCount">0 tags</span>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // State
+        let rawHTML = "";
+        const settings = {
+            removeAttributes: false,
+            removeClasses: false,
+            removeStyles: false
+        };
+
+        // DOM Elements
+        const pasteTarget = document.getElementById('pasteTarget');
+        const codeOutput = document.getElementById('codeOutput');
+        const charCountEl = document.getElementById('charCount');
+        const tagCountEl = document.getElementById('tagCount');
+        const toast = document.getElementById('toast');
+
+        // --- Event Listeners ---
+
+        // Handle Paste on the visual div
+        pasteTarget.addEventListener('paste', (e) => {
+            e.preventDefault();
+            
+            // Try to get HTML, fallback to plain text
+            let pastedData = (e.clipboardData || window.clipboardData).getData('text/html');
+            
+            if (!pastedData) {
+                pastedData = (e.clipboardData || window.clipboardData).getData('text/plain');
+                // Wrap plain text in p tags for visual consistency if it looks like paragraphs
+                if(pastedData) {
+                    pastedData = pastedData.split('\n').map(line => line.trim() ? `<p>${line}</p>` : '<br>').join('');
+                }
+            }
+
+            if (pastedData) {
+                rawHTML = pastedData;
+                processHTML();
+            }
+        });
+
+        // Handle placeholder logic
+        pasteTarget.addEventListener('focus', () => {
+            if (pasteTarget.innerHTML === '') {
+                pasteTarget.classList.add('paste-zone-active');
+            }
+        });
+        pasteTarget.addEventListener('blur', () => {
+            pasteTarget.classList.remove('paste-zone-active');
+        });
+
+        // --- Core Logic ---
+
+        function processHTML() {
+            if (!rawHTML) return;
+
+            // Create a temporary DOM element to manipulate the HTML
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = rawHTML;
+
+            // Cleaning Logic
+            if (settings.removeAttributes) {
+                const allElements = tempDiv.getElementsByTagName("*");
+                for (let i = 0; i < allElements.length; i++) {
+                    const el = allElements[i];
+                    // Keep only semantic attributes if needed, currently removing ALL except essential structural ones could be an option, 
+                    // but "No Attributes" usually implies stripping IDs, data-*, etc.
+                    // For a true "No Attributes", we wipe everything.
+                    while (el.attributes.length > 0) {
+                         el.removeAttribute(el.attributes[0].name);
+                    }
+                }
+            } else {
+                // Granular cleaning
+                if (settings.removeClasses) {
+                    const allElements = tempDiv.getElementsByTagName("*");
+                    for (let i = 0; i < allElements.length; i++) {
+                        allElements[i].removeAttribute('class');
+                    }
+                }
+                if (settings.removeStyles) {
+                    const allElements = tempDiv.getElementsByTagName("*");
+                    for (let i = 0; i < allElements.length; i++) {
+                        allElements[i].removeAttribute('style');
+                    }
+                }
+            }
+
+            // Remove common Microsoft Word junk (comments, empty spans)
+            cleanWordJunk(tempDiv);
+
+            // Update Visual Preview
+            pasteTarget.innerHTML = tempDiv.innerHTML;
+
+            // Format Code for Output Area
+            const formattedCode = formatHTML(tempDiv.innerHTML);
+            codeOutput.value = formattedCode;
+
+            // Update Stats
+            updateStats(formattedCode);
+        }
+
+        function cleanWordJunk(root) {
+            // Remove HTML comments
+            const nodeIterator = document.createNodeIterator(
+                root,
+                NodeFilter.SHOW_COMMENT,
+                null,
+                false
+            );
+            let node;
+            while ((node = nodeIterator.nextNode())) {
+                node.parentNode.removeChild(node);
+            }
+
+            // Remove Meta tags if they were pasted
+            const metas = root.querySelectorAll('meta');
+            metas.forEach(m => m.remove());
+
+            // Optional: Unwrap generic spans that have no attributes? 
+            // Often nice, but might be too aggressive for general use.
+        }
+
+        function toggleCleaner(type) {
+            const btnMap = {
+                'attributes': document.getElementById('btnAttr'),
+                'classes': document.getElementById('btnClass'),
+                'styles': document.getElementById('btnStyle')
+            };
+
+            if (type === 'attributes') {
+                settings.removeAttributes = !settings.removeAttributes;
+                toggleBtnStyle(btnMap.attributes, settings.removeAttributes);
+                
+                // If removing all attributes, disable the granular ones visually
+                if (settings.removeAttributes) {
+                    settings.removeClasses = false;
+                    settings.removeStyles = false;
+                    toggleBtnStyle(btnMap.classes, false);
+                    toggleBtnStyle(btnMap.styles, false);
+                    btnMap.classes.disabled = true;
+                    btnMap.styles.disabled = true;
+                    btnMap.classes.classList.add('opacity-50', 'cursor-not-allowed');
+                    btnMap.styles.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    btnMap.classes.disabled = false;
+                    btnMap.styles.disabled = false;
+                    btnMap.classes.classList.remove('opacity-50', 'cursor-not-allowed');
+                    btnMap.styles.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            } else if (type === 'classes') {
+                settings.removeClasses = !settings.removeClasses;
+                toggleBtnStyle(btnMap.classes, settings.removeClasses);
+            } else if (type === 'styles') {
+                settings.removeStyles = !settings.removeStyles;
+                toggleBtnStyle(btnMap.styles, settings.removeStyles);
+            }
+
+            // Re-process
+            processHTML();
+        }
+
+        function toggleBtnStyle(btn, isActive) {
+            if (isActive) {
+                btn.classList.remove('text-gray-400');
+                btn.classList.add('bg-blue-600', 'text-white');
+            } else {
+                btn.classList.add('text-gray-400');
+                btn.classList.remove('bg-blue-600', 'text-white');
+            }
+        }
+
+        // Simple HTML Formatter (Pretty Print)
+        function formatHTML(html) {
+            let formatted = '';
+            let indent = '';
+            const tab = '    ';
+            
+            html.split(/>\s*</).forEach(function(element) {
+                if (element.match( /^\/\w/ )) {
+                    indent = indent.substring(tab.length);
+                }
+
+                formatted += indent + '<' + element + '>\r\n';
+
+                if (element.match( /^<?\w[^>]*[^\/]$/ ) && !element.startsWith("input")  && !element.startsWith("img") && !element.startsWith("br") && !element.startsWith("hr")) { 
+                    indent += tab;              
+                }
+            });
+
+            return formatted.substring(1, formatted.length-3);
+        }
+
+        // Better Formatter using browser parser logic (more robust than regex above)
+        // but for a single file, the regex above handles basic nesting visualization 
+        // reasonably well for pasted content. Let's stick to a simpler recursive one if regex fails too hard, 
+        // but for this scope regex is usually fine for "viewing". 
+        // Actually, let's just ensure the regex doesn't break content.
+        
+        // Revised simpler formatting for display
+        // Note: A true formatter is complex. We will use a simplified approach that relies on DOM structure 
+        // if the regex proves too brittle, but text-manipulation is faster for display.
+        
+        function updateStats(code) {
+            charCountEl.innerText = `${code.length} chars`;
+            // Rough tag count
+            const tags = (code.match(/<[^>]+>/g) || []).length;
+            tagCountEl.innerText = `${tags} tags`;
+        }
+
+        function copyToClipboard() {
+            if (!codeOutput.value) return;
+            
+            codeOutput.select();
+            document.execCommand('copy');
+            
+            // Show toast
+            const toastEl = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            
+            toastEl.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toastEl.classList.add('translate-y-20', 'opacity-0');
+            }, 2000);
+        }
+
+        function resetApp() {
+            rawHTML = "";
+            pasteTarget.innerHTML = "";
+            codeOutput.value = "";
+            updateStats("");
+        }
+
+        // Init empty state
+        if(pasteTarget.innerHTML.trim() === "") {
+           // The CSS :empty pseudo-class or data-placeholder logic handles the text
+        }
+    </script>
+    
+    <style>
+        /* Placeholder logic using CSS content */
+        [contenteditable]:empty:before {
+            content: attr(data-placeholder);
+            color: #6b7280;
+            pointer-events: none;
+            display: block; /* For Firefox */
+        }
+    </style>
+</body>
+</html>
