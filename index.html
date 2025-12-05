@@ -4,234 +4,867 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JSF.IO - Ruby Developer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-        
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script defer src="https://cloud.umami.is/script.js" data-website-id="5573b652-b7a1-4212-a205-ec9d4af9d4f3"></script>
+    <style>
+        :root {
+            --bg-deep: #0a0a0b;
+            --bg-card: #111113;
+            --bg-elevated: #18181b;
+            --text-primary: #fafaf9;
+            --text-secondary: #d4d4d8;
+            --text-muted: #a1a1aa;
+            --accent: #d4a574;
+            --accent-glow: rgba(212, 165, 116, 0.15);
+            --border: #27272a;
+            --border-subtle: #1f1f23;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 14px;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0,0,0,0.03) 2px,
+                    rgba(0,0,0,0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .serif {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            padding: 80px 0 60px;
+            position: relative;
+        }
+
+        .header-content {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .name-block h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+
+        .title-line {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: var(--accent);
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .header-meta {
+            text-align: right;
+            padding-top: 8px;
+        }
+
+        .header-meta a, .header-meta span {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .header-meta a:hover {
+            color: var(--accent);
+        }
+
+        /* Bio Section */
+        .bio {
+            padding: 60px 0;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .bio-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 60px;
+        }
+
+        .bio-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .bio-text {
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            max-width: 700px;
+        }
+
+        .bio-text em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        /* Skills Pills */
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 40px;
+        }
+
+        .skill {
+            padding: 6px 14px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .skill:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Section Headers */
+        .section {
+            padding: 80px 0;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .section-header {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 60px;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+        }
+
+        .section-subtitle {
+            font-size: 32px;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        /* Tools Grid */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 60px;
+        }
+
+        .tools-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .tool-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 13px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 0;
+            background: var(--accent-glow);
+            transition: width 0.3s ease;
+        }
+
+        .tool-link:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        .tool-link:hover::before {
+            width: 100%;
+        }
+
+        .tool-link span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .tool-arrow {
+            font-size: 16px;
+            opacity: 0;
+            transform: translateX(-8px);
+            transition: all 0.3s ease;
+        }
+
+        .tool-link:hover .tool-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Projects */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 60px;
+        }
+
+        .projects-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 32px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 32px;
+            right: 32px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover {
+            border-color: var(--border);
+            transform: translateY(-2px);
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .project-name {
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        .project-name a {
+            color: var(--text-primary);
+        }
+
+        .project-name a:hover {
+            color: var(--accent);
+        }
+
+        .project-type {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            padding: 4px 10px;
+            border: 1px solid var(--accent);
+            opacity: 0.7;
+        }
+
+        .project-desc {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .project-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .project-tech {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tech-tag {
+            font-size: 11px;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            background: var(--bg-elevated);
+        }
+
+        .project-link {
+            font-size: 12px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .project-link:hover {
+            color: var(--text-primary);
+        }
+
+        /* Timeline */
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 60px;
+        }
+
+        .timeline {
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--accent), var(--border));
+        }
+
+        .timeline-item {
+            padding-left: 32px;
+            padding-bottom: 32px;
+            position: relative;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -4px;
+            top: 8px;
+            width: 9px;
+            height: 9px;
+            background: var(--bg-deep);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+        }
+
+        .timeline-item:first-child::before {
+            background: var(--accent);
+        }
+
+        .timeline-role {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .timeline-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .timeline-meta a {
+            color: var(--accent);
+        }
+
+        /* Contact */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr 1fr;
+            gap: 60px;
+        }
+
+        .contact-info p {
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .contact-info strong {
+            color: var(--text-muted);
+            font-weight: 400;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .contact-form textarea {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 16px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s ease;
+        }
+
+        .contact-form textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .send-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 28px;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .send-btn:hover {
+            background: var(--accent);
+            color: var(--bg-deep);
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border-subtle);
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .header-content {
+                grid-template-columns: 1fr;
+            }
+
+            .header-meta {
+                text-align: left;
+                display: flex;
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+
+            .header-meta a, .header-meta span {
+                margin-bottom: 0;
+            }
+
+            .bio-grid,
+            .tools-grid,
+            .projects-grid,
+            .timeline-grid,
+            .contact-grid,
+            .section-header {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 48px 0 40px;
+            }
+
+            .section {
+                padding: 48px 0;
+            }
+
+            .name-block h1 {
+                font-size: 2.5rem;
+            }
+
+            .tools-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Ambient glow effect */
+        .glow-orb {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        .glow-orb-1 {
+            top: -200px;
+            right: -200px;
+        }
+
+        .glow-orb-2 {
+            bottom: 20%;
+            left: -300px;
+        }
+
+    </style>
 </head>
-<body class="bg-gray-200 text-gray-900 p-8">
-    <div class="max-w-4xl mx-auto space-y-8">
-        
+<body>
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+
+    <div class="container">
         <!-- Header -->
-        <div class="p-6">
-            <!-- <h1 class="text-5xl font-semibold mb-5">JSF.IO</h1> -->
-            <p class="text-gray-800 mb-1 text-2xl font-semibold">Jared Fraser</p>
-            <p class="text-gray-600 mb-4">Ruby on Rails Developer</p>
-            <div class="flex flex-wrap gap-4 text-sm">
-                <span>Auckland, New Zealand</span>
+        <header>
+            <div class="header-content">
+                <div class="name-block">
+                    <h1 class="serif">Jared Fraser</h1>
+                    <div class="title-line">
+                        <span>Ruby on Rails Developer</span>
+                        <span class="cursor"></span>
+                    </div>
+                </div>
+                <div class="header-meta">
+                    <span>Auckland, New Zealand</span>
+                    <a href="https://github.com/modsognir">github.com/modsognir</a>
+                    <a href="mailto:dev@jsf.io">dev@jsf.io</a>
+                </div>
+            </div>
+        </header>
 
-                <span><a href="https://github.com/modsognir">github.com/modsognir</a></span>
-                <span><a href="mailto:dev@jsf.io">dev@jsf.io</a></span>
+        <!-- Bio -->
+        <section class="bio">
+            <div class="bio-grid">
+                <div class="bio-label">About</div>
+                <div>
+                    <p class="bio-text">
+                        I'm a Ruby on Rails developer with over <em>15 years</em> of experience building web applications. I focus on writing clean, maintainable code and have a passion for building great user experiences. I work well with challenging codebases, get projects to production fast, and enjoy building back-office and data-driven projects.
+                    </p>
+                    <div class="skills">
+                        <span class="skill">Ruby on Rails</span>
+                        <span class="skill">Tailwind</span>
+                        <span class="skill">JavaScript</span>
+                        <span class="skill">React</span>
+                        <span class="skill">Svelte</span>
+                        <span class="skill">Alpine.js</span>
+                        <span class="skill">PostgreSQL</span>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <!-- About -->
-        <div class="p-6 pt-0">
-            <p class="text-gray-700 leading-relaxed pb-10">
-                I'm a Ruby on Rails developer with over 15 years of experience building web applications. I focus on writing clean, maintainable code and have a passion for building great user experiences.
-                I work well with challenging codebases, get projects to production fast, and enjoy building back-office and data-driven projects.
-            </p>
-            <div class="flex flex-wrap gap-2">
-                <span class="px-3 py-1 bg-gray-100 border border-gray-300 text-sm">Ruby on Rails</span>
-                <span class="px-3 py-1 bg-gray-100 border border-gray-300 text-sm">Tailwind</span>
-                <span class="px-3 py-1 bg-gray-100 border border-gray-300 text-sm">JavaScript</span>
-                <span class="px-3 py-1 bg-gray-100 border border-gray-300 text-sm">React</span>
-                <span class="px-3 py-1 bg-gray-100 border border-gray-300 text-sm">Svelte</span>
-                <span class="px-3 py-1 bg-gray-100 border border-gray-300 text-sm">Alpine.js</span>
-                <span class="px-3 py-1 bg-gray-100 border border-gray-300 text-sm">PostgreSQL</span>
+        <!-- Tools -->
+        <section class="section">
+            <div class="tools-grid">
+                <div class="section-title">Tools</div>
+                <div class="tools-list">
+                    <a href="/tools/sqlite-viewer" class="tool-link">
+                        <span>SQLite viewer</span>
+                        <span class="tool-arrow">→</span>
+                    </a>
+                    <a href="/tools/csv-viewer" class="tool-link">
+                        <span>CSV viewer</span>
+                        <span class="tool-arrow">→</span>
+                    </a>
+                    <a href="/tools/rails-new" class="tool-link">
+                        <span>rails new generator</span>
+                        <span class="tool-arrow">→</span>
+                    </a>
+                    <a href="/tools/ai-costs" class="tool-link">
+                        <span>AI Cost Calculator</span>
+                        <span class="tool-arrow">→</span>
+                    </a>
+                    <a href="/tools/diff" class="tool-link">
+                        <span>Text diff</span>
+                        <span class="tool-arrow">→</span>
+                    </a>
+                    <a href="/tools/sequence-diagram" class="tool-link">
+                        <span>Sequence diagrams</span>
+                        <span class="tool-arrow">→</span>
+                    </a>
+                    <a href="/tools/markdown" class="tool-link">
+                        <span>Markdown editor</span>
+                        <span class="tool-arrow">→</span>
+                    </a>
+                    <a href="/tools/svg-symbol-viewer" class="tool-link">
+                        <span>SVG symbol viewer</span>
+                        <span class="tool-arrow">→</span>
+                    </a>
+                    <a href="/tools/clipboard-to-html" class="tool-link">
+                        <span>Clipboard to HTML</span>
+                        <span class="tool-arrow">→</span>
+                    </a>
+                </div>
             </div>
-        </div>
-        <!-- Personal Tools -->
-        <div class="p-6">
-            <h2 class="text-xl font-medium mb-4">Tools</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                <a href="/tools/sqlite-viewer" class="px-3 py-2 bg-white border border-gray-300 text-sm flex justify-between items-center">
-                    <span>SQLite viewer</span>
-                    <span>-></span>
-                </a>
-                <a href="/tools/csv-viewer" class="px-3 py-2 bg-white border border-gray-300 text-sm flex justify-between items-center">
-                    <span>CSV viewer</span>
-                    <span>-></span>
-                </a>
-                <a href="/tools/rails-new" class="px-3 py-2 bg-white border border-gray-300 text-sm flex justify-between items-center">
-                  <span><code>rails new</code> &nbsp; command generator</span>
-                  <span>-></span>
-                </a>
-                <a href="/tools/ai-costs" class="px-3 py-2 bg-white border border-gray-300 text-sm flex justify-between items-center">
-                  <span>AI Cost Calculator</span>
-                  <span>-></span>
-                </a>
-                <a href="/tools/diff" class="px-3 py-2 bg-white border border-gray-300 text-sm flex justify-between items-center">
-                    <span>Text diff</span>
-                    <span>-></span>
-                </a>
-                <a href="/tools/sequence-diagram" class="px-3 py-2 bg-white border border-gray-300 text-sm flex justify-between items-center">
-                  <span>Sequence diagrams</span>
-                  <span>-></span>
-              </a>
-                <a href="/tools/markdown" class="px-3 py-2 bg-white border border-gray-300 text-sm flex justify-between items-center">
-                    <span>Markdown editor</span>
-                    <span>-></span>
-                </a>
-                <a href="/tools/svg-symbol-viewer" class="px-3 py-2 bg-white border border-gray-300 text-sm flex justify-between items-center">
-                    <span>SVG symbol viewer</span>
-                    <span>-></span>
-                </a>
-                <a href="/tools/clipboard-to-html" class="px-3 py-2 bg-white border border-gray-300 text-sm flex justify-between items-center">
-                    <span>Clipboard to HTML</span>
-                    <span>-></span>
-                </a>
-            </div>
-        </div>
+        </section>
+
         <!-- Projects -->
-        <div class="p-6">
-            <h2 class="text-xl font-medium mb-4">Projects</h2>
-            <div class="space-y-4">
-                
-                <div class="border border-gray-300 bg-white p-4">
-                    <h3 class="font-medium"><a href="https://builders.gg">Builders.gg</a></h3>
-                    <p class="text-sm text-gray-500 mb-2">Destiny 2 Build Aggregator</p>
-                    <p class="text-sm text-gray-600 mb-3">
-                        A web application that aggregates and Destiny 2 character builds, focuses on build sharing and discovery.
-                        Helps players find a build that matches their playstyle and share their own builds with the community.
-                    </p>
-                    <div class="flex flex-wrap gap-2 text-xs">
-                        <span class="px-2 py-1 border border-black"><a href="https://builders.gg">builders.gg -></a></span>
-                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">Ruby on Rails</span>
-                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">PostgreSQL</span>
-                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">Alpine.js</span>
-                    </div>
-                </div>
+        <section class="section">
+            <div class="projects-grid">
+                <div class="section-title">Projects</div>
+                <div class="projects-list">
+                    <article class="project-card">
+                        <div class="project-header">
+                            <h3 class="project-name serif"><a href="https://moderantai.com" target="_blank">ModerantAI</a></h3>
+                            <span class="project-type">Platform</span>
+                        </div>
+                        <p class="project-desc">An AI content moderation platform that helps businesses and communities automatically moderate user-generated content.</p>
+                        <div class="project-footer">
+                            <div class="project-tech">
+                                <span class="tech-tag">Ruby on Rails</span>
+                                <span class="tech-tag">PostgreSQL</span>
+                            </div>
+                            <a href="https://moderantai.com" target="_blank" class="project-link">moderantai.com →</a>
+                        </div>
+                    </article>
 
-                <div class="border border-gray-300 bg-white p-4">
-                    <h3 class="font-medium"><a href="https://devtrackers.gg">Devtrackers.gg</a></h3>
-                    <p class="text-sm text-gray-500 mb-2">Developer Tracker</p>
-                    <p class="text-sm text-gray-600 mb-3">
-                        Tracks game developer posts on social media to help players keep on top of updates and information.
-                    </p>
-                    <div class="flex flex-wrap gap-2 text-xs">
-                        <span class="px-2 py-1 border border-black"><a href="https://v2.devtrackers.gg">devtrackers.gg -></a></span>
-                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">Ruby on Rails</span>
-                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">PostgreSQL</span>
-                    </div>
-                </div>
+                    <article class="project-card">
+                        <div class="project-header">
+                            <h3 class="project-name serif"><a href="https://builders.gg" target="_blank">Builders.gg</a></h3>
+                            <span class="project-type">Gaming</span>
+                        </div>
+                        <p class="project-desc">A web application that aggregates Destiny 2 character builds, focusing on build sharing and discovery. Helps players find builds matching their playstyle.</p>
+                        <div class="project-footer">
+                            <div class="project-tech">
+                                <span class="tech-tag">Ruby on Rails</span>
+                                <span class="tech-tag">PostgreSQL</span>
+                                <span class="tech-tag">Alpine.js</span>
+                            </div>
+                            <a href="https://builders.gg" target="_blank" class="project-link">builders.gg →</a>
+                        </div>
+                    </article>
 
-                <div class="border border-gray-300 bg-white p-4">
-                    <h3 class="font-medium"><a href="https://osrsvault.com">OSRSVault</a></h3>
-                    <p class="text-sm text-gray-500 mb-2">Old School Runescape Tools</p>
-                    <p class="text-sm text-gray-600 mb-3">
-                        Tools and utilities for Old School Runescape players, providing up to the minute information.
-                    </p>
-                    <div class="flex flex-wrap gap-2 text-xs">
-                        <span class="px-2 py-1 border border-black"><a href="https://osrsvault.com">osrsvault.com -></a></span>
-                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">Ruby on Rails</span>
-                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">PostgreSQL</span>
-                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">Svelte</span>
-                    </div>
-                </div>
+                    <article class="project-card">
+                        <div class="project-header">
+                            <h3 class="project-name serif"><a href="https://devtrackers.gg" target="_blank">Devtrackers.gg</a></h3>
+                            <span class="project-type">Gaming</span>
+                        </div>
+                        <p class="project-desc">Tracks game developer posts on social media to help players keep on top of updates and information.</p>
+                        <div class="project-footer">
+                            <div class="project-tech">
+                                <span class="tech-tag">Ruby on Rails</span>
+                                <span class="tech-tag">PostgreSQL</span>
+                            </div>
+                            <a href="https://devtrackers.gg" target="_blank" class="project-link">devtrackers.gg →</a>
+                        </div>
+                    </article>
 
-                <div class="border border-gray-300 bg-white p-4">
-                    <h3 class="font-medium"><a href="https://stormshield.one">Storm Shield One</a></h3>
-                    <p class="text-sm text-gray-500 mb-2">Fortnite Player Stats</p>
-                    <p class="text-sm text-gray-600 mb-2">I built stormshield.one to help me analyse my gameplay and more effectively display information from ingame. At its peak, the site was serving millions of users per month. The site was acquired by ZAM Network in 2018 and shuttered a few months after I departed their team in 2019</p>
-                    <div class="flex flex-wrap gap-2 text-xs">
-                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">Ruby on Rails</span>
-                        <span class="px-2 py-1 bg-gray-100 border border-gray-200">PostgreSQL</span>
-                    </div>
-                </div>
+                    <article class="project-card">
+                        <div class="project-header">
+                            <h3 class="project-name serif"><a href="https://osrsvault.com" target="_blank">OSRSVault</a></h3>
+                            <span class="project-type">Gaming</span>
+                        </div>
+                        <p class="project-desc">Tools and utilities for Old School Runescape players, providing up to the minute information.</p>
+                        <div class="project-footer">
+                            <div class="project-tech">
+                                <span class="tech-tag">Ruby on Rails</span>
+                                <span class="tech-tag">PostgreSQL</span>
+                                <span class="tech-tag">Svelte</span>
+                            </div>
+                            <a href="https://osrsvault.com" target="_blank" class="project-link">osrsvault.com →</a>
+                        </div>
+                    </article>
 
+                    <article class="project-card">
+                        <div class="project-header">
+                            <h3 class="project-name serif"><a href="https://stormshield.one" target="_blank">Storm Shield One</a></h3>
+                            <span class="project-type">Acquired</span>
+                        </div>
+                        <p class="project-desc">Built to analyse Fortnite gameplay and display in-game information. At peak, served millions of users monthly. Acquired by ZAM Network in 2018.</p>
+                        <div class="project-footer">
+                            <div class="project-tech">
+                                <span class="tech-tag">Ruby on Rails</span>
+                                <span class="tech-tag">PostgreSQL</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Ruby Development History -->
-        <div class="p-6">
-            <h2 class="text-xl font-medium mb-4">Ruby Development History</h2>
-            <div class="space-y-4">
-                
-                <div>
-                    <h3 class="font-medium">Freelance Developer</h3>
-                    <p class="text-sm text-gray-600"><a href="https://jsf.nz">jsf.nz</a> • 2019 - Present</p>
+        <!-- Timeline -->
+        <section class="section">
+            <div class="timeline-grid">
+                <div class="section-title">Experience</div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-role">Senior Software Engineer</div>
+                        <div class="timeline-meta">NDA Client · 2020 — 2026</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-role">Freelance Developer</div>
+                        <div class="timeline-meta">Various clients · 2019 — Present</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-role">Senior Ruby Developer</div>
+                        <div class="timeline-meta">BridgeU · 2018</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-role">Freelance Developer</div>
+                        <div class="timeline-meta">2016 — 2018</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-role">Contract Ruby Developer</div>
+                        <div class="timeline-meta">Cogent · 2015 — 2016</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-role">Senior Ruby Developer</div>
+                        <div class="timeline-meta">Money Advice Service · 2013 — 2015</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-role">Senior Ruby Developer</div>
+                        <div class="timeline-meta">Australian Medical Council · 2009 — 2012</div>
+                    </div>
                 </div>
-
-                <div>
-                    <h3 class="font-medium">Senior Ruby Developer</h3>
-                    <p class="text-sm text-gray-600">BridgeU • 2018</p>
-                </div>
-
-                <div>
-                    <h3 class="font-medium">Freelance Developer</h3>
-                    <p class="text-sm text-gray-600">Freelance • 2016 - 2018</p>
-                </div>
-
-                <div>
-                    <h3 class="font-medium">Contract Ruby Developer</h3>
-                    <p class="text-sm text-gray-600">Cogent • 2015 - 2016</p>
-                </div>
-
-                <div>
-                    <h3 class="font-medium">Senior Ruby Developer</h3>
-                    <p class="text-sm text-gray-600">Money Advice Service • 2013 - 2015</p>
-                </div>
-
-                <div>
-                    <h3 class="font-medium">Senior Ruby Developer</h3>
-                    <p class="text-sm text-gray-600">Australian Medical Council • 2009 - 2012</p>
-                </div>
-
             </div>
-        </div>
+        </section>
 
         <!-- Contact -->
-        <div class="p-6">
-            <h2 class="text-xl font-medium mb-4">Contact</h2>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="space-y-2">
-                    <p><strong>Email:</strong> dev@jsf.io</p>
-                    <p><strong>Github:</strong> <a href="https://github.com/modsognir">github.com/modsognir</a></p>
+        <section class="section">
+            <div class="contact-grid">
+                <div class="section-title">Contact</div>
+                <div class="contact-info">
+                    <p>
+                        <strong>Email</strong>
+                        <a href="mailto:dev@jsf.io">dev@jsf.io</a>
+                    </p>
+                    <p>
+                        <strong>Github</strong>
+                        <a href="https://github.com/modsognir">github.com/modsognir</a>
+                    </p>
                 </div>
                 <div>
-                    <form class="space-y-3">
-                        <textarea placeholder="Message" rows="3" id="contact-message" onchange="composeEmail()" class="w-full p-2 border border-gray-300 focus:outline-none focus:border-black"></textarea>
-                        <a class="block text-center send-mail w-full p-2 bg-black text-white hover:bg-gray-800 transition-colors">Send</a>
+                    <form class="contact-form">
+                        <textarea placeholder="Your message..." rows="4" id="contact-message" onchange="composeEmail()"></textarea>
+                        <a class="send-btn send-mail" href="#">
+                            <span>Send Message</span>
+                            <span>→</span>
+                        </a>
                     </form>
-                    <script>
-                        function composeEmail() {
-                            const message = document.getElementById('contact-message').value;
-                            
-                            const subject = `Contact from website`;
-                            const body = `${message}`;
-                            
-                            const email = `mailto:dev@jsf.io?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                            document.querySelector('.send-mail').href = email;
-                        }
-                    </script>
                 </div>
             </div>
-        </div>
+        </section>
 
+        <!-- Footer -->
+        <footer>
+            <p class="footer-text">© 2024 Jared Fraser · Auckland, New Zealand</p>
+        </footer>
     </div>
 
     <script>
-        // Simple form handling
-        document.querySelector('form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const button = this.querySelector('button');
-            const originalText = button.textContent;
-            
-            button.textContent = 'Sent!';
-            button.disabled = true;
-            
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.disabled = false;
-                this.reset();
-            }, 2000);
-        });
+        function composeEmail() {
+            const message = document.getElementById('contact-message').value;
+            const subject = 'Contact from website';
+            const body = message;
+            const email = `mailto:dev@jsf.io?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            document.querySelector('.send-mail').href = email;
+        }
+
     </script>
 </body>
 </html>
