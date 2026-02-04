@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My CLAUDE.md - Jared Fraser</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="5573b652-b7a1-4212-a205-ec9d4af9d4f3"></script>
+    <style>
+        :root {
+            --bg-deep: #0a0a0b;
+            --bg-card: #111113;
+            --bg-elevated: #18181b;
+            --text-primary: #fafaf9;
+            --text-secondary: #d4d4d8;
+            --text-muted: #a1a1aa;
+            --accent: #d4a574;
+            --accent-glow: rgba(212, 165, 116, 0.15);
+            --border: #27272a;
+            --border-subtle: #1f1f23;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-size: 14px;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0,0,0,0.03) 2px,
+                    rgba(0,0,0,0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .serif {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header {
+            padding: 60px 0 40px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .back-link {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 24px;
+            display: inline-block;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .post-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        article {
+            padding: 60px 0;
+        }
+
+        .intro {
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .intro a {
+            color: var(--accent);
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 500;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            color: var(--accent);
+        }
+
+        h2:first-of-type {
+            margin-top: 0;
+        }
+
+        ul {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+
+        li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        code {
+            background: var(--bg-elevated);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 13px;
+        }
+
+        .code-block {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 24px;
+            margin: 24px 0;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .code-block code {
+            background: none;
+            padding: 0;
+        }
+
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border-subtle);
+            text-align: center;
+        }
+
+        .footer-text {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .glow-orb {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.4;
+        }
+
+        .glow-orb-1 {
+            top: -200px;
+            right: -200px;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 40px 0 30px;
+            }
+
+            article {
+                padding: 40px 0;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-orb glow-orb-1"></div>
+
+    <div class="container">
+        <header>
+            <a href="/" class="back-link">← Back to home</a>
+            <h1 class="serif">My CLAUDE.md</h1>
+            <p class="post-meta">February 2025</p>
+        </header>
+
+        <article>
+            <p class="intro">
+                <a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank">Claude Code</a> reads a <code>CLAUDE.md</code> file from your project root and your home directory to understand your coding preferences. Here's mine, refined over months of working with Claude on Ruby on Rails projects.
+            </p>
+
+            <h2>General</h2>
+            <ul>
+                <li>Plan before you do anything, then implement.</li>
+                <li>Commit when you're finished with a request.</li>
+            </ul>
+
+            <h2>Code style</h2>
+            <ul>
+                <li>Write in small, simple, single-responsibility ruby classes.</li>
+                <li>First, always write specs for any class you write. Prefer small simple specs instead of heavily mocked ones.</li>
+                <li>Specs should prefer black box style testing where the input is specified and <code>expect</code> the outputs.</li>
+                <li>This is not java, so I don't want any Services or Factories named classes.</li>
+                <li>Don't hijack existing code to add a "special case" for new functionality unless absolutely necessary. Try and gracefully extend the code to accept the new case naturally or create something new to ensure it's simple.</li>
+                <li>Large classes should ring alarm bells. Those are not simple.</li>
+                <li>Do not write code comments.</li>
+                <li>Names are short and straightforward.</li>
+                <li>Name classes as either a Noun for data (eg Post), or an action a human might do (eg. ImportRedditPosts, AssignAdmin) for actions (instead of services).</li>
+                <li>Action/service-type classes should have a <code>call</code> method that passes in any required information. Do not use initialize.</li>
+                <li>Background Jobs should avoid custom code where possible - they should instead call one or more Action classes.</li>
+                <li>Controllers should try to keep to standard REST actions. If there's a need for a non-REST action, consider using a different controller instead where it makes sense.</li>
+                <li>Avoid code in controllers and models much as possible. Move them into classes where it makes sense.</li>
+                <li>If you are writing a complete feature, write an end-to-end rspec feature spec first.</li>
+                <li>SVG Icons should be extracted into a helper.</li>
+                <li>Use ENV vars over rails credentials (through dotenv)</li>
+            </ul>
+
+            <h2>Failure cases</h2>
+            <ul>
+                <li>Code should always raise an exception when it fails, unless it's a specific failure use-case we want.</li>
+            </ul>
+
+            <h2>Interfaces</h2>
+            <ul>
+                <li>Test interfaces with a feature spec using capybara.</li>
+                <li>Annotate the feature spec file with a short high-level overview of the feature.</li>
+                <li>User-facing functionality or changes need to be tested in a feature spec.</li>
+            </ul>
+
+            <h2>Index views</h2>
+            <ul>
+                <li>Use icons instead of view, delete, edit.</li>
+                <li>Use the name to link to the resource show page.</li>
+            </ul>
+
+            <h2>Controllers</h2>
+            <ul>
+                <li>If accessing data owned by a user or organisation, only access data through the current_user or current_organisation.</li>
+            </ul>
+
+            <h2>Fixing bugs/errors</h2>
+            <ul>
+                <li>When you are asked to fix a bug or error, you need to write a test to confirm the behaviour, so that you can run it to confirm the behaviour is fixed.</li>
+            </ul>
+
+            <h2>Styling</h2>
+            <ul>
+                <li>Always add dark/light mode styling</li>
+            </ul>
+        </article>
+
+        <footer>
+            <p class="footer-text">© 2024 Jared Fraser · Auckland, New Zealand</p>
+        </footer>
+    </div>
+</body>
+</html>
