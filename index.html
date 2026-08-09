@@ -3,923 +3,235 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSF.IO - Ruby Developer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <title>JSF.IO - AI-Enabled Developer</title>
+    <meta name="description" content="Jared Fraser - AI-enabled developer in Auckland, New Zealand. Full-stack development, LLM pipelines, rapid prototyping and team AI enablement.">
+    <link rel="stylesheet" href="/site.css">
+    <script src="/theme.js"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="5573b652-b7a1-4212-a205-ec9d4af9d4f3"></script>
-    <style>
-        :root {
-            --bg-deep: #0a0a0b;
-            --bg-card: #111113;
-            --bg-elevated: #18181b;
-            --text-primary: #fafaf9;
-            --text-secondary: #d4d4d8;
-            --text-muted: #a1a1aa;
-            --accent: #d4a574;
-            --accent-glow: rgba(212, 165, 116, 0.15);
-            --border: #27272a;
-            --border-subtle: #1f1f23;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'JetBrains Mono', monospace;
-            background: var(--bg-deep);
-            color: var(--text-primary);
-            line-height: 1.7;
-            font-size: 14px;
-            min-height: 100vh;
-            position: relative;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background:
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(0,0,0,0.03) 2px,
-                    rgba(0,0,0,0.03) 4px
-                );
-            pointer-events: none;
-            z-index: 1000;
-        }
-
-        .serif {
-            font-family: 'Cormorant Garamond', Georgia, serif;
-        }
-
-        a {
-            color: var(--accent);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        a:hover {
-            color: var(--text-primary);
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        /* Header */
-        header {
-            padding: 80px 0 60px;
-            position: relative;
-        }
-
-        .header-content {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 40px;
-            align-items: start;
-        }
-
-        .name-block h1 {
-            font-size: clamp(3rem, 8vw, 5rem);
-            font-weight: 400;
-            letter-spacing: -0.02em;
-            line-height: 1;
-            margin-bottom: 16px;
-        }
-
-        .title-line {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--text-secondary);
-            font-size: 13px;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-
-        .header-meta {
-            text-align: right;
-            padding-top: 8px;
-        }
-
-        .header-meta a, .header-meta span {
-            display: block;
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        .header-meta a:hover {
-            color: var(--accent);
-        }
-
-        /* Bio Section */
-        .bio {
-            padding: 60px 0;
-            border-top: 1px solid var(--border-subtle);
-        }
-
-        .bio-grid {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 60px;
-        }
-
-        .bio-label {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-secondary);
-        }
-
-        .bio-text {
-            font-size: 18px;
-            line-height: 1.8;
-            color: var(--text-secondary);
-            max-width: 700px;
-        }
-
-        .bio-text em {
-            font-style: italic;
-            color: var(--accent);
-        }
-
-        /* Skills Pills */
-        .skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 40px;
-        }
-
-        .skill {
-            padding: 6px 14px;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border);
-            font-size: 12px;
-            color: var(--text-secondary);
-            transition: all 0.3s ease;
-        }
-
-        .skill:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        /* Section Headers */
-        .section {
-            padding: 80px 0;
-            border-top: 1px solid var(--border-subtle);
-        }
-
-        .section-header {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 60px;
-            margin-bottom: 40px;
-        }
-
-        .section-title {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-secondary);
-        }
-
-        .section-subtitle {
-            font-size: 32px;
-            font-weight: 400;
-            letter-spacing: -0.01em;
-        }
-
-        /* Tools Grid */
-        .tools-grid {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 60px;
-        }
-
-        .tools-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 12px;
-        }
-
-        .tool-link {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 18px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            font-size: 13px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .tool-link::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 0;
-            background: var(--accent-glow);
-            transition: width 0.3s ease;
-        }
-
-        .tool-link:hover {
-            border-color: var(--accent);
-            color: var(--text-primary);
-        }
-
-        .tool-link:hover::before {
-            width: 100%;
-        }
-
-        .tool-link span {
-            position: relative;
-            z-index: 1;
-        }
-
-        .tool-arrow {
-            font-size: 16px;
-            opacity: 0;
-            transform: translateX(-8px);
-            transition: all 0.3s ease;
-        }
-
-        .tool-link:hover .tool-arrow {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        /* Projects */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 60px;
-        }
-
-        .projects-list {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .project-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 32px;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: 32px;
-            right: 32px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .project-card:hover {
-            border-color: var(--border);
-            transform: translateY(-2px);
-        }
-
-        .project-card:hover::before {
-            opacity: 1;
-        }
-
-        .project-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-
-        .project-name {
-            font-size: 20px;
-            font-weight: 400;
-            letter-spacing: -0.01em;
-        }
-
-        .project-name a {
-            color: var(--text-primary);
-        }
-
-        .project-name a:hover {
-            color: var(--accent);
-        }
-
-        .project-type {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--accent);
-            padding: 4px 10px;
-            border: 1px solid var(--accent);
-            opacity: 0.7;
-        }
-
-        .project-desc {
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-            line-height: 1.7;
-        }
-
-        .project-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .project-tech {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .tech-tag {
-            font-size: 11px;
-            color: var(--text-muted);
-            padding: 4px 8px;
-            background: var(--bg-elevated);
-        }
-
-        .project-link {
-            font-size: 12px;
-            color: var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .project-link:hover {
-            color: var(--text-primary);
-        }
-
-        /* Posts List */
-        .posts-grid {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 60px;
-        }
-
-        .posts-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-        }
-
-        .post-item {
-            display: block;
-            padding: 24px 0;
-            border-bottom: 1px solid var(--border-subtle);
-            transition: all 0.3s ease;
-        }
-
-        .post-item:first-child {
-            padding-top: 0;
-        }
-
-        .post-item:last-child {
-            border-bottom: none;
-        }
-
-        .post-item:hover .post-title {
-            color: var(--accent);
-        }
-
-        .post-date {
-            font-size: 12px;
-            color: var(--text-muted);
-            letter-spacing: 0.05em;
-            margin-bottom: 8px;
-        }
-
-        .post-title {
-            font-size: 20px;
-            font-weight: 400;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            transition: color 0.3s ease;
-        }
-
-        .post-excerpt {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        /* Timeline */
-        .timeline-grid {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 60px;
-        }
-
-        .timeline {
-            position: relative;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 8px;
-            bottom: 8px;
-            width: 1px;
-            background: linear-gradient(to bottom, var(--accent), var(--border));
-        }
-
-        .timeline-item {
-            padding-left: 32px;
-            padding-bottom: 32px;
-            position: relative;
-            margin-left: -2px;
-        }
-
-        .timeline-item:last-child {
-            padding-bottom: 0;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -4px;
-            top: 8px;
-            width: 9px;
-            height: 9px;
-            background: var(--bg-deep);
-            border: 2px solid var(--accent);
-            border-radius: 50%;
-        }
-
-        .timeline-item:first-child::before {
-            background: var(--accent);
-        }
-
-        .timeline-role {
-            font-size: 16px;
-            margin-bottom: 4px;
-        }
-
-        .timeline-meta {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .timeline-meta a {
-            color: var(--accent);
-        }
-
-        /* Contact */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 200px 1fr 1fr;
-            gap: 60px;
-        }
-
-        .contact-info p {
-            margin-bottom: 12px;
-            color: var(--text-secondary);
-        }
-
-        .contact-info strong {
-            color: var(--text-muted);
-            font-weight: 400;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .contact-form {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .contact-form textarea {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 16px;
-            color: var(--text-primary);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-            resize: vertical;
-            min-height: 100px;
-            transition: border-color 0.3s ease;
-        }
-
-        .contact-form textarea::placeholder {
-            color: var(--text-muted);
-        }
-
-        .contact-form textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .send-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 14px 28px;
-            background: transparent;
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-
-        .send-btn:hover {
-            background: var(--accent);
-            color: var(--bg-deep);
-        }
-
-        /* Footer */
-        footer {
-            padding: 40px 0;
-            border-top: 1px solid var(--border-subtle);
-            text-align: center;
-        }
-
-        .footer-text {
-            font-size: 11px;
-            color: var(--text-muted);
-            letter-spacing: 0.05em;
-        }
-
-        /* Responsive */
-        @media (max-width: 900px) {
-            .header-content {
-                grid-template-columns: 1fr;
-            }
-
-            .header-meta {
-                text-align: left;
-                display: flex;
-                gap: 16px;
-                flex-wrap: wrap;
-            }
-
-            .header-meta a, .header-meta span {
-                margin-bottom: 0;
-            }
-
-            .bio-grid,
-            .tools-grid,
-            .posts-grid,
-            .projects-grid,
-            .timeline-grid,
-            .contact-grid,
-            .section-header {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-
-            .contact-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 600px) {
-            header {
-                padding: 48px 0 40px;
-            }
-
-            .section {
-                padding: 48px 0;
-            }
-
-            .name-block h1 {
-                font-size: 2.5rem;
-            }
-
-            .tools-list {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Ambient glow effect */
-        .glow-orb {
-            position: fixed;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.4;
-        }
-
-        .glow-orb-1 {
-            top: -200px;
-            right: -200px;
-        }
-
-        .glow-orb-2 {
-            bottom: 20%;
-            left: -300px;
-        }
-
-    </style>
 </head>
 <body>
-    <div class="glow-orb glow-orb-1"></div>
-    <div class="glow-orb glow-orb-2"></div>
+    <div class="wrap">
 
-    <div class="container">
-        <!-- Header -->
-        <header>
-            <div class="header-content">
-                <div class="name-block">
-                    <h1 class="serif">Jared Fraser</h1>
-                    <div class="title-line">
-                        <span>Ruby on Rails Developer</span>
-                    </div>
+        <header class="masthead">
+            <div class="masthead-top">
+                <div>
+                    <h1>Jared Fraser</h1>
+                    <p class="role">AI-Enabled Developer</p>
                 </div>
-                <div class="header-meta">
-                    <span>Auckland, New Zealand</span>
-                    <a href="https://github.com/modsognir">github.com/modsognir</a>
-                    <a href="mailto:dev@jsf.io">dev@jsf.io</a>
-                </div>
+                <button class="theme-toggle" type="button">switch theme</button>
+            </div>
+            <div class="identity">
+                <span>Auckland, New Zealand</span>
+                <a href="https://github.com/modsognir">github.com/modsognir</a>
+                <a href="mailto:dev@jsf.io">dev@jsf.io</a>
             </div>
         </header>
 
-        <!-- Bio -->
-        <section class="bio">
-            <div class="bio-grid">
-                <div class="bio-label">About</div>
-                <div>
-                    <p class="bio-text">
-                        I'm a Ruby on Rails developer with over <em>15 years</em> of experience building web applications. I focus on writing clean, maintainable code and have a passion for building great user experiences. I work well with challenging codebases, get projects to production fast, and enjoy building back-office and data-driven projects.
-                    </p>
-                    <div class="skills">
-                        <span class="skill">Ruby on Rails</span>
-                        <span class="skill">Tailwind</span>
-                        <span class="skill">JavaScript</span>
-                        <span class="skill">React</span>
-                        <span class="skill">Svelte</span>
-                        <span class="skill">Alpine.js</span>
-                        <span class="skill">PostgreSQL</span>
-                    </div>
-                </div>
+        <section class="section">
+            <div class="section-head">
+                <h2>About</h2>
+            </div>
+            <p class="bio">
+                I build software that makes work easier. With over 15 years shipping web applications, I combine engineering experience with AI tools to deliver faster. I pick the right tool for every job — whether that's Rails, React, Python, or something else — and I help teams do the same.
+            </p>
+            <div class="taglist">
+                <span class="tag">AI Integration</span>
+                <span class="tag">Claude</span>
+                <span class="tag">LLM Pipelines</span>
+                <span class="tag">Ruby on Rails</span>
+                <span class="tag">Python</span>
+                <span class="tag">React</span>
+                <span class="tag">PostgreSQL</span>
+                <span class="tag">Rapid Prototyping</span>
             </div>
         </section>
 
-        <!-- Tools -->
         <section class="section">
-            <div class="tools-grid">
-                <div class="section-title">Tools</div>
-                <div class="tools-list">
-                    <a href="/tools/sqlite-viewer" class="tool-link">
-                        <span>SQLite viewer</span>
-                        <span class="tool-arrow">→</span>
-                    </a>
-                    <a href="/tools/csv-viewer" class="tool-link">
-                        <span>CSV viewer</span>
-                        <span class="tool-arrow">→</span>
-                    </a>
-                    <a href="/tools/rails-new" class="tool-link">
-                        <span>rails new generator</span>
-                        <span class="tool-arrow">→</span>
-                    </a>
-                    <a href="/tools/ai-costs" class="tool-link">
-                        <span>AI Cost Calculator</span>
-                        <span class="tool-arrow">→</span>
-                    </a>
-                    <a href="/tools/diff" class="tool-link">
-                        <span>Text diff</span>
-                        <span class="tool-arrow">→</span>
-                    </a>
-                    <a href="/tools/sequence-diagram" class="tool-link">
-                        <span>Sequence diagrams</span>
-                        <span class="tool-arrow">→</span>
-                    </a>
-                    <a href="/tools/markdown" class="tool-link">
-                        <span>Markdown editor</span>
-                        <span class="tool-arrow">→</span>
-                    </a>
-                    <a href="/tools/svg-symbol-viewer" class="tool-link">
-                        <span>SVG symbol viewer</span>
-                        <span class="tool-arrow">→</span>
-                    </a>
-                    <a href="/tools/clipboard-to-html" class="tool-link">
-                        <span>Clipboard to HTML</span>
-                        <span class="tool-arrow">→</span>
-                    </a>
-                </div>
+            <div class="section-head">
+                <h2>Services</h2>
+                <p class="lede">Four ways I work with teams.</p>
+            </div>
+            <div class="cards">
+                <article class="card">
+                    <h3>AI-Augmented Development</h3>
+                    <p>Full-stack development with AI woven into every step — from architecture to deployment. I ship production-quality software faster. But AI is not the tool for every job, and I pick solutions that are right for the work.</p>
+                </article>
+
+                <article class="card">
+                    <h3>AI Integration &amp; Pipelines</h3>
+                    <p>Add AI capabilities to your existing product. Content moderation, classification, summarisation, data extraction — I build LLM pipelines that are reliable, cost-effective, and actually work in production.</p>
+                </article>
+
+                <article class="card">
+                    <h3>Rapid Prototyping</h3>
+                    <p>Go from idea to working prototype fast. I use AI-accelerated workflows to build and validate concepts. Ideal for startups and new product lines.</p>
+                </article>
+
+                <article class="card">
+                    <h3>Team AI Enablement</h3>
+                    <p>Help your development team adopt AI tools effectively. From setting up Claude Code workflows to building custom CLAUDE.md configurations, I help teams unlock real productivity gains.</p>
+                </article>
             </div>
         </section>
 
-        <!-- Posts -->
         <section class="section">
-            <div class="posts-grid">
-                <div class="section-title">Posts</div>
-                <div class="posts-list">
-                    <a href="/posts/my-claude-md.html" class="post-item">
-                        <div class="post-date">February 2025</div>
-                        <h3 class="post-title serif">My CLAUDE.md</h3>
-                        <p class="post-excerpt">My CLAUDE.md file refined over months of working with Claude on Ruby on Rails projects.</p>
-                    </a>
-                </div>
+            <div class="section-head">
+                <h2>Projects</h2>
+                <p class="lede">Products I've built and run.</p>
+            </div>
+            <div class="cards">
+                <article class="card">
+                    <div class="card-head">
+                        <h3><a href="https://moderantai.com" target="_blank" rel="noopener">ModerantAI</a></h3>
+                        <span class="badge">Platform</span>
+                    </div>
+                    <p>An AI content moderation platform that helps businesses and communities automatically moderate user-generated content.</p>
+                    <div class="card-foot">
+                        <div class="taglist">
+                            <span class="chip">Ruby on Rails</span>
+                            <span class="chip">PostgreSQL</span>
+                        </div>
+                        <a class="visit" href="https://moderantai.com" target="_blank" rel="noopener">moderantai.com →</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-head">
+                        <h3><a href="https://builders.gg" target="_blank" rel="noopener">Builders.gg</a></h3>
+                        <span class="badge">Gaming</span>
+                    </div>
+                    <p>A web application that aggregates Destiny 2 character builds, focusing on build sharing and discovery. Helps players find builds matching their playstyle.</p>
+                    <div class="card-foot">
+                        <div class="taglist">
+                            <span class="chip">Ruby on Rails</span>
+                            <span class="chip">PostgreSQL</span>
+                            <span class="chip">Alpine.js</span>
+                        </div>
+                        <a class="visit" href="https://builders.gg" target="_blank" rel="noopener">builders.gg →</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-head">
+                        <h3><a href="https://devtrackers.gg" target="_blank" rel="noopener">Devtrackers.gg</a></h3>
+                        <span class="badge">Gaming</span>
+                    </div>
+                    <p>Tracks game developer posts on social media to help players keep on top of updates and information.</p>
+                    <div class="card-foot">
+                        <div class="taglist">
+                            <span class="chip">Ruby on Rails</span>
+                            <span class="chip">PostgreSQL</span>
+                        </div>
+                        <a class="visit" href="https://devtrackers.gg" target="_blank" rel="noopener">devtrackers.gg →</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-head">
+                        <h3><a href="https://osrsvault.com" target="_blank" rel="noopener">OSRSVault</a></h3>
+                        <span class="badge">Gaming</span>
+                    </div>
+                    <p>Tools and utilities for Old School Runescape players, providing up to the minute information.</p>
+                    <div class="card-foot">
+                        <div class="taglist">
+                            <span class="chip">Ruby on Rails</span>
+                            <span class="chip">PostgreSQL</span>
+                            <span class="chip">Svelte</span>
+                        </div>
+                        <a class="visit" href="https://osrsvault.com" target="_blank" rel="noopener">osrsvault.com →</a>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <div class="card-head">
+                        <h3>Storm Shield One</h3>
+                        <span class="badge">Acquired</span>
+                    </div>
+                    <p>Built to analyse Fortnite gameplay and display in-game information. At peak, served millions of users monthly. Acquired by ZAM Network in 2018.</p>
+                    <div class="card-foot">
+                        <div class="taglist">
+                            <span class="chip">Ruby on Rails</span>
+                            <span class="chip">PostgreSQL</span>
+                        </div>
+                    </div>
+                </article>
             </div>
         </section>
 
-        <!-- Projects -->
         <section class="section">
-            <div class="projects-grid">
-                <div class="section-title">Projects</div>
-                <div class="projects-list">
-                    <article class="project-card">
-                        <div class="project-header">
-                            <h3 class="project-name serif"><a href="https://moderantai.com" target="_blank">ModerantAI</a></h3>
-                            <span class="project-type">Platform</span>
-                        </div>
-                        <p class="project-desc">An AI content moderation platform that helps businesses and communities automatically moderate user-generated content.</p>
-                        <div class="project-footer">
-                            <div class="project-tech">
-                                <span class="tech-tag">Ruby on Rails</span>
-                                <span class="tech-tag">PostgreSQL</span>
-                            </div>
-                            <a href="https://moderantai.com" target="_blank" class="project-link">moderantai.com →</a>
-                        </div>
-                    </article>
-
-                    <article class="project-card">
-                        <div class="project-header">
-                            <h3 class="project-name serif"><a href="https://builders.gg" target="_blank">Builders.gg</a></h3>
-                            <span class="project-type">Gaming</span>
-                        </div>
-                        <p class="project-desc">A web application that aggregates Destiny 2 character builds, focusing on build sharing and discovery. Helps players find builds matching their playstyle.</p>
-                        <div class="project-footer">
-                            <div class="project-tech">
-                                <span class="tech-tag">Ruby on Rails</span>
-                                <span class="tech-tag">PostgreSQL</span>
-                                <span class="tech-tag">Alpine.js</span>
-                            </div>
-                            <a href="https://builders.gg" target="_blank" class="project-link">builders.gg →</a>
-                        </div>
-                    </article>
-
-                    <article class="project-card">
-                        <div class="project-header">
-                            <h3 class="project-name serif"><a href="https://devtrackers.gg" target="_blank">Devtrackers.gg</a></h3>
-                            <span class="project-type">Gaming</span>
-                        </div>
-                        <p class="project-desc">Tracks game developer posts on social media to help players keep on top of updates and information.</p>
-                        <div class="project-footer">
-                            <div class="project-tech">
-                                <span class="tech-tag">Ruby on Rails</span>
-                                <span class="tech-tag">PostgreSQL</span>
-                            </div>
-                            <a href="https://devtrackers.gg" target="_blank" class="project-link">devtrackers.gg →</a>
-                        </div>
-                    </article>
-
-                    <article class="project-card">
-                        <div class="project-header">
-                            <h3 class="project-name serif"><a href="https://osrsvault.com" target="_blank">OSRSVault</a></h3>
-                            <span class="project-type">Gaming</span>
-                        </div>
-                        <p class="project-desc">Tools and utilities for Old School Runescape players, providing up to the minute information.</p>
-                        <div class="project-footer">
-                            <div class="project-tech">
-                                <span class="tech-tag">Ruby on Rails</span>
-                                <span class="tech-tag">PostgreSQL</span>
-                                <span class="tech-tag">Svelte</span>
-                            </div>
-                            <a href="https://osrsvault.com" target="_blank" class="project-link">osrsvault.com →</a>
-                        </div>
-                    </article>
-
-                    <article class="project-card">
-                        <div class="project-header">
-                            <h3 class="project-name serif"><a href="https://stormshield.one" target="_blank">Storm Shield One</a></h3>
-                            <span class="project-type">Acquired</span>
-                        </div>
-                        <p class="project-desc">Built to analyse Fortnite gameplay and display in-game information. At peak, served millions of users monthly. Acquired by ZAM Network in 2018.</p>
-                        <div class="project-footer">
-                            <div class="project-tech">
-                                <span class="tech-tag">Ruby on Rails</span>
-                                <span class="tech-tag">PostgreSQL</span>
-                            </div>
-                        </div>
-                    </article>
-                </div>
+            <div class="section-head">
+                <h2>Posts</h2>
+            </div>
+            <div class="posts">
+                <a href="/posts/my-claude-md.html" class="post-item">
+                    <span class="post-date">February 2025</span>
+                    <h3 class="post-title">My CLAUDE.md</h3>
+                    <span class="post-excerpt">My CLAUDE.md file refined over months of working with Claude on Ruby on Rails projects.</span>
+                </a>
             </div>
         </section>
 
-        <!-- Timeline -->
         <section class="section">
-            <div class="timeline-grid">
-                <div class="section-title">Experience</div>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-role">Senior Software Engineer</div>
-                        <div class="timeline-meta">NDA Client · 2020 — 2026</div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-role">Freelance Developer</div>
-                        <div class="timeline-meta">Various clients · 2019 — Present</div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-role">Senior Ruby Developer</div>
-                        <div class="timeline-meta">BridgeU · 2018</div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-role">Freelance Developer</div>
-                        <div class="timeline-meta">2016 — 2018</div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-role">Contract Ruby Developer</div>
-                        <div class="timeline-meta">Cogent · 2015 — 2016</div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-role">Senior Ruby Developer</div>
-                        <div class="timeline-meta">Money Advice Service · 2013 — 2015</div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-role">Senior Ruby Developer</div>
-                        <div class="timeline-meta">Australian Medical Council · 2009 — 2012</div>
-                    </div>
-                </div>
+            <div class="section-head">
+                <h2>Tools</h2>
+                <p class="lede">Small single-purpose utilities. All of them run in the browser.</p>
+            </div>
+            <div class="tools">
+                <a href="/tools/sqlite-viewer" class="tool"><span>SQLite viewer</span><span class="arrow" aria-hidden="true">→</span></a>
+                <a href="/tools/csv-viewer" class="tool"><span>CSV viewer</span><span class="arrow" aria-hidden="true">→</span></a>
+                <a href="/tools/rails-new" class="tool"><span>rails new generator</span><span class="arrow" aria-hidden="true">→</span></a>
+                <a href="/tools/ai-costs" class="tool"><span>AI cost calculator</span><span class="arrow" aria-hidden="true">→</span></a>
+                <a href="/tools/diff" class="tool"><span>Text diff</span><span class="arrow" aria-hidden="true">→</span></a>
+                <a href="/tools/sequence-diagram" class="tool"><span>Sequence diagrams</span><span class="arrow" aria-hidden="true">→</span></a>
+                <a href="/tools/markdown" class="tool"><span>Markdown editor</span><span class="arrow" aria-hidden="true">→</span></a>
+                <a href="/tools/svg-symbol-viewer" class="tool"><span>SVG symbol viewer</span><span class="arrow" aria-hidden="true">→</span></a>
+                <a href="/tools/clipboard-to-html" class="tool"><span>Clipboard to HTML</span><span class="arrow" aria-hidden="true">→</span></a>
             </div>
         </section>
 
-        <!-- Contact -->
         <section class="section">
-            <div class="contact-grid">
-                <div class="section-title">Contact</div>
-                <div class="contact-info">
+            <div class="section-head">
+                <h2>Contact</h2>
+                <p class="lede">Tell me what you're building and I'll come back to you.</p>
+            </div>
+            <div class="contact">
+                <div class="details">
                     <p>
-                        <strong>Email</strong>
+                        <span class="k">Email</span>
                         <a href="mailto:dev@jsf.io">dev@jsf.io</a>
                     </p>
                     <p>
-                        <strong>Github</strong>
+                        <span class="k">Github</span>
                         <a href="https://github.com/modsognir">github.com/modsognir</a>
                     </p>
+                    <p>
+                        <span class="k">Based in</span>
+                        Auckland, New Zealand
+                    </p>
                 </div>
-                <div>
-                    <form class="contact-form">
-                        <textarea placeholder="Your message..." rows="4" id="contact-message" onchange="composeEmail()"></textarea>
-                        <a class="send-btn send-mail" href="#">
-                            <span>Send Message</span>
-                            <span>→</span>
-                        </a>
-                    </form>
+                <div class="field">
+                    <label for="contact-message">Your message</label>
+                    <textarea id="contact-message" rows="4" placeholder="What are you working on?" oninput="composeEmail()"></textarea>
+                    <a class="btn send-mail" href="mailto:dev@jsf.io?subject=Contact%20from%20website">Send message →</a>
                 </div>
             </div>
         </section>
 
-        <!-- Footer -->
-        <footer>
-            <p class="footer-text">© 2024 Jared Fraser · Auckland, New Zealand</p>
+        <footer class="site-footer">
+            <span>© 2025 Jared Fraser</span>
+            <span>Auckland, New Zealand</span>
+            <a href="mailto:dev@jsf.io">dev@jsf.io</a>
         </footer>
+
     </div>
 
     <script>
         function composeEmail() {
             const message = document.getElementById('contact-message').value;
             const subject = 'Contact from website';
-            const body = message;
-            const email = `mailto:dev@jsf.io?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            document.querySelector('.send-mail').href = email;
+            document.querySelector('.send-mail').href =
+                `mailto:dev@jsf.io?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
         }
-
     </script>
 </body>
 </html>
