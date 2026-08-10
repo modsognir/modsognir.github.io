@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSF.IO - AI-Enabled Developer</title>
-    <meta name="description" content="Jared Fraser - AI-enabled developer in Auckland, New Zealand. Full-stack development, LLM pipelines, rapid prototyping and team AI enablement.">
+    <title>Jared Fraser — web software, shipped</title>
+    <meta name="description" content="Jared Fraser is a developer in Auckland, New Zealand. Fifteen years of building and shipping web products on Rails and Postgres, now with AI in the parts it's good at.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600&family=Zilla+Slab:wght@500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/site.css">
     <script src="/theme.js"></script>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="5573b652-b7a1-4212-a205-ec9d4af9d4f3"></script>
@@ -12,207 +15,192 @@
 <body>
     <div class="wrap">
 
-        <header class="masthead">
-            <div class="masthead-top">
-                <div>
-                    <h1>Jared Fraser</h1>
-                    <p class="role">AI-Enabled Developer</p>
-                </div>
-                <button class="theme-toggle" type="button">switch theme</button>
-            </div>
-            <div class="identity">
-                <span>Auckland, New Zealand</span>
-                <a href="https://github.com/modsognir">github.com/modsognir</a>
+        <div class="topbar">
+            <a class="mark" href="/">jsf.io</a>
+            <nav>
+                <a href="#shipped">Shipped</a>
+                <a href="#tools">Tools</a>
+                <a href="#talk">Contact</a>
+                <button class="theme-toggle" type="button">Theme</button>
+            </nav>
+        </div>
+
+        <header class="hero">
+            <h1>Fifteen years of shipping web software.</h1>
+            <p class="hero-sub">
+                I'm Jared Fraser, a developer in Auckland. I build products end to end and run them once they're live — Rails and Postgres for the parts that have to last, AI for the parts it's genuinely good at.
+            </p>
+            <p class="hero-meta">
                 <a href="mailto:dev@jsf.io">dev@jsf.io</a>
-            </div>
+            </p>
         </header>
 
-        <section class="section">
-            <div class="section-head">
-                <h2>About</h2>
+        <section class="section" id="shipped">
+            <div class="section-bar">
+                <h2 class="label">Shipped</h2>
+                <span class="label">Five products</span>
             </div>
-            <p class="bio">
-                I build software that makes work easier. With over 15 years shipping web applications, I combine engineering experience with AI tools to deliver faster. I pick the right tool for every job — whether that's Rails, React, Python, or something else — and I help teams do the same.
-            </p>
-            <div class="taglist">
-                <span class="tag">AI Integration</span>
-                <span class="tag">Claude</span>
-                <span class="tag">LLM Pipelines</span>
-                <span class="tag">Ruby on Rails</span>
-                <span class="tag">Python</span>
-                <span class="tag">React</span>
-                <span class="tag">PostgreSQL</span>
-                <span class="tag">Rapid Prototyping</span>
-            </div>
-        </section>
+            <p class="section-note">Products I built and then ran — support, scaling, moderation, the unglamorous half.</p>
 
-        <section class="section">
-            <div class="section-head">
-                <h2>Services</h2>
-                <p class="lede">Four ways I work with teams.</p>
-            </div>
-            <div class="cards">
-                <article class="card">
-                    <h3>AI-Augmented Development</h3>
-                    <p>Full-stack development with AI woven into every step — from architecture to deployment. I ship production-quality software faster. But AI is not the tool for every job, and I pick solutions that are right for the work.</p>
-                </article>
+            <div class="ledger">
+                <div class="ledger-head">
+                    <span class="label">Project</span>
+                    <span class="label">Built on</span>
+                    <span class="label" style="justify-self: end;">Where</span>
+                </div>
 
-                <article class="card">
-                    <h3>AI Integration &amp; Pipelines</h3>
-                    <p>Add AI capabilities to your existing product. Content moderation, classification, summarisation, data extraction — I build LLM pipelines that are reliable, cost-effective, and actually work in production.</p>
-                </article>
+                <a class="entry rise" href="https://moderantai.com" target="_blank" rel="noopener">
+                    <h3 class="entry-name">ModerantAI</h3>
+                    <p class="entry-what">Content moderation for businesses and communities, run by models instead of a queue of tired humans.</p>
+                    <span class="entry-stack">Rails · Postgres</span>
+                    <span class="entry-end">moderantai.com →</span>
+                </a>
 
-                <article class="card">
-                    <h3>Rapid Prototyping</h3>
-                    <p>Go from idea to working prototype fast. I use AI-accelerated workflows to build and validate concepts. Ideal for startups and new product lines.</p>
-                </article>
+                <a class="entry rise" href="https://builders.gg" target="_blank" rel="noopener">
+                    <h3 class="entry-name">Builders.gg</h3>
+                    <p class="entry-what">Destiny 2 character builds, collected and made searchable so players can find one that fits how they actually play.</p>
+                    <span class="entry-stack">Rails · Postgres · Alpine</span>
+                    <span class="entry-end">builders.gg →</span>
+                </a>
 
-                <article class="card">
-                    <h3>Team AI Enablement</h3>
-                    <p>Help your development team adopt AI tools effectively. From setting up Claude Code workflows to building custom CLAUDE.md configurations, I help teams unlock real productivity gains.</p>
-                </article>
-            </div>
-        </section>
+                <a class="entry rise" href="https://devtrackers.gg" target="_blank" rel="noopener">
+                    <h3 class="entry-name">Devtrackers.gg</h3>
+                    <p class="entry-what">Tracks what game developers post across social media, so players don't have to watch six accounts to catch an update.</p>
+                    <span class="entry-stack">Rails · Postgres</span>
+                    <span class="entry-end">devtrackers.gg →</span>
+                </a>
 
-        <section class="section">
-            <div class="section-head">
-                <h2>Projects</h2>
-                <p class="lede">Products I've built and run.</p>
-            </div>
-            <div class="cards">
-                <article class="card">
-                    <div class="card-head">
-                        <h3><a href="https://moderantai.com" target="_blank" rel="noopener">ModerantAI</a></h3>
-                        <span class="badge">Platform</span>
-                    </div>
-                    <p>An AI content moderation platform that helps businesses and communities automatically moderate user-generated content.</p>
-                    <div class="card-foot">
-                        <div class="taglist">
-                            <span class="chip">Ruby on Rails</span>
-                            <span class="chip">PostgreSQL</span>
-                        </div>
-                        <a class="visit" href="https://moderantai.com" target="_blank" rel="noopener">moderantai.com →</a>
-                    </div>
-                </article>
+                <a class="entry rise" href="https://osrsvault.com" target="_blank" rel="noopener">
+                    <h3 class="entry-name">OSRSVault</h3>
+                    <p class="entry-what">Up-to-the-minute tools for Old School RuneScape players, fed by a game economy that moves every few minutes.</p>
+                    <span class="entry-stack">Rails · Postgres · Svelte</span>
+                    <span class="entry-end">osrsvault.com →</span>
+                </a>
 
-                <article class="card">
-                    <div class="card-head">
-                        <h3><a href="https://builders.gg" target="_blank" rel="noopener">Builders.gg</a></h3>
-                        <span class="badge">Gaming</span>
-                    </div>
-                    <p>A web application that aggregates Destiny 2 character builds, focusing on build sharing and discovery. Helps players find builds matching their playstyle.</p>
-                    <div class="card-foot">
-                        <div class="taglist">
-                            <span class="chip">Ruby on Rails</span>
-                            <span class="chip">PostgreSQL</span>
-                            <span class="chip">Alpine.js</span>
-                        </div>
-                        <a class="visit" href="https://builders.gg" target="_blank" rel="noopener">builders.gg →</a>
-                    </div>
-                </article>
-
-                <article class="card">
-                    <div class="card-head">
-                        <h3><a href="https://devtrackers.gg" target="_blank" rel="noopener">Devtrackers.gg</a></h3>
-                        <span class="badge">Gaming</span>
-                    </div>
-                    <p>Tracks game developer posts on social media to help players keep on top of updates and information.</p>
-                    <div class="card-foot">
-                        <div class="taglist">
-                            <span class="chip">Ruby on Rails</span>
-                            <span class="chip">PostgreSQL</span>
-                        </div>
-                        <a class="visit" href="https://devtrackers.gg" target="_blank" rel="noopener">devtrackers.gg →</a>
-                    </div>
-                </article>
-
-                <article class="card">
-                    <div class="card-head">
-                        <h3><a href="https://osrsvault.com" target="_blank" rel="noopener">OSRSVault</a></h3>
-                        <span class="badge">Gaming</span>
-                    </div>
-                    <p>Tools and utilities for Old School Runescape players, providing up to the minute information.</p>
-                    <div class="card-foot">
-                        <div class="taglist">
-                            <span class="chip">Ruby on Rails</span>
-                            <span class="chip">PostgreSQL</span>
-                            <span class="chip">Svelte</span>
-                        </div>
-                        <a class="visit" href="https://osrsvault.com" target="_blank" rel="noopener">osrsvault.com →</a>
-                    </div>
-                </article>
-
-                <article class="card">
-                    <div class="card-head">
-                        <h3>Storm Shield One</h3>
-                        <span class="badge">Acquired</span>
-                    </div>
-                    <p>Built to analyse Fortnite gameplay and display in-game information. At peak, served millions of users monthly. Acquired by ZAM Network in 2018.</p>
-                    <div class="card-foot">
-                        <div class="taglist">
-                            <span class="chip">Ruby on Rails</span>
-                            <span class="chip">PostgreSQL</span>
-                        </div>
-                    </div>
-                </article>
+                <div class="entry rise">
+                    <h3 class="entry-name">Storm Shield One</h3>
+                    <p class="entry-what">A Fortnite companion that read your gameplay back to you. Served millions of players a month at its peak.</p>
+                    <span class="entry-stack">Rails · Postgres</span>
+                    <span class="entry-end"><span class="badge">Acquired 2018</span></span>
+                </div>
             </div>
         </section>
 
-        <section class="section">
-            <div class="section-head">
-                <h2>Posts</h2>
+        <section class="section" id="work">
+            <div class="section-bar">
+                <h2 class="label">Working with me</h2>
             </div>
-            <div class="posts">
-                <a href="/posts/my-claude-md.html" class="post-item">
-                    <span class="post-date">February 2025</span>
-                    <h3 class="post-title">My CLAUDE.md</h3>
-                    <span class="post-excerpt">My CLAUDE.md file refined over months of working with Claude on Ruby on Rails projects.</span>
+            <p class="section-note">Four ways that usually starts, whether you need a whole product or one difficult piece of it.</p>
+
+            <div class="does">
+                <div>
+                    <h3>AI-augmented development</h3>
+                    <p>Full-stack work with AI in the loop from architecture to deploy. It makes me faster; it doesn't make every decision, and I'll tell you where it isn't earning its place.</p>
+                </div>
+                <div>
+                    <h3>AI features and pipelines</h3>
+                    <p>Moderation, classification, summarisation, extraction. Pipelines built to survive real traffic, real costs and the inputs nobody planned for.</p>
+                </div>
+                <div>
+                    <h3>Rapid prototyping</h3>
+                    <p>Idea to a thing you can click by the end of the week, in Python, React or Rails — whichever gets you an answer soonest.</p>
+                </div>
+                <div>
+                    <h3>Team enablement</h3>
+                    <p>Getting your developers genuinely productive with Claude Code: workflows, CLAUDE.md conventions, and the habits that make the difference.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="tools">
+            <div class="section-bar">
+                <h2 class="label">Tools</h2>
+                <span class="label">Nine, free to use</span>
+            </div>
+            <p class="section-note">Small things I got tired of not having. They run entirely in your browser — files you open never leave your machine.</p>
+
+            <div class="bench">
+                <a class="tool" href="/tools/sqlite-viewer">
+                    <span class="tool-name">SQLite viewer</span>
+                    <span class="tool-what">Open a database file and browse its tables</span>
+                    <span class="tool-go" aria-hidden="true">→</span>
+                </a>
+                <a class="tool" href="/tools/csv-viewer">
+                    <span class="tool-name">CSV viewer</span>
+                    <span class="tool-what">Read a CSV with sorting and filtering</span>
+                    <span class="tool-go" aria-hidden="true">→</span>
+                </a>
+                <a class="tool" href="/tools/rails-new">
+                    <span class="tool-name">rails new generator</span>
+                    <span class="tool-what">Assemble the command with the options you want, for Rails 8</span>
+                    <span class="tool-go" aria-hidden="true">→</span>
+                </a>
+                <a class="tool" href="/tools/ai-costs">
+                    <span class="tool-name">AI cost calculator</span>
+                    <span class="tool-what">Compare token prices across models before you commit</span>
+                    <span class="tool-go" aria-hidden="true">→</span>
+                </a>
+                <a class="tool" href="/tools/diff">
+                    <span class="tool-name">Text diff</span>
+                    <span class="tool-what">Put two blocks of text side by side</span>
+                    <span class="tool-go" aria-hidden="true">→</span>
+                </a>
+                <a class="tool" href="/tools/sequence-diagram">
+                    <span class="tool-name">Sequence diagrams</span>
+                    <span class="tool-what">Write markdown, get a sequence diagram</span>
+                    <span class="tool-go" aria-hidden="true">→</span>
+                </a>
+                <a class="tool" href="/tools/markdown">
+                    <span class="tool-name">Markdown editor</span>
+                    <span class="tool-what">Draft markdown with the result beside it</span>
+                    <span class="tool-go" aria-hidden="true">→</span>
+                </a>
+                <a class="tool" href="/tools/svg-symbol-viewer">
+                    <span class="tool-name">SVG symbol viewer</span>
+                    <span class="tool-what">See every symbol in a sprite sheet at once</span>
+                    <span class="tool-go" aria-hidden="true">→</span>
+                </a>
+                <a class="tool" href="/tools/clipboard-to-html">
+                    <span class="tool-name">Clipboard to HTML</span>
+                    <span class="tool-what">Paste rich text, get markup you'd be happy to ship</span>
+                    <span class="tool-go" aria-hidden="true">→</span>
                 </a>
             </div>
         </section>
 
-        <section class="section">
-            <div class="section-head">
-                <h2>Tools</h2>
-                <p class="lede">Small single-purpose utilities. All of them run in the browser.</p>
+        <section class="section" id="writing">
+            <div class="section-bar">
+                <h2 class="label">Writing</h2>
             </div>
-            <div class="tools">
-                <a href="/tools/sqlite-viewer" class="tool"><span>SQLite viewer</span><span class="arrow" aria-hidden="true">→</span></a>
-                <a href="/tools/csv-viewer" class="tool"><span>CSV viewer</span><span class="arrow" aria-hidden="true">→</span></a>
-                <a href="/tools/rails-new" class="tool"><span>rails new generator</span><span class="arrow" aria-hidden="true">→</span></a>
-                <a href="/tools/ai-costs" class="tool"><span>AI cost calculator</span><span class="arrow" aria-hidden="true">→</span></a>
-                <a href="/tools/diff" class="tool"><span>Text diff</span><span class="arrow" aria-hidden="true">→</span></a>
-                <a href="/tools/sequence-diagram" class="tool"><span>Sequence diagrams</span><span class="arrow" aria-hidden="true">→</span></a>
-                <a href="/tools/markdown" class="tool"><span>Markdown editor</span><span class="arrow" aria-hidden="true">→</span></a>
-                <a href="/tools/svg-symbol-viewer" class="tool"><span>SVG symbol viewer</span><span class="arrow" aria-hidden="true">→</span></a>
-                <a href="/tools/clipboard-to-html" class="tool"><span>Clipboard to HTML</span><span class="arrow" aria-hidden="true">→</span></a>
+
+            <div class="ledger">
+                <a class="entry" href="/posts/my-claude-md.html">
+                    <h3 class="entry-name">My CLAUDE.md</h3>
+                    <p class="entry-what">The instructions file I've refined over months of Rails work with Claude, and why each rule is in there.</p>
+                    <span class="entry-stack">February 2025</span>
+                    <span class="entry-end">Read →</span>
+                </a>
             </div>
         </section>
 
-        <section class="section">
-            <div class="section-head">
-                <h2>Contact</h2>
-                <p class="lede">Tell me what you're building and I'll come back to you.</p>
+        <section class="section" id="talk">
+            <div class="section-bar">
+                <h2 class="label">Contact</h2>
             </div>
+
             <div class="contact">
-                <div class="details">
-                    <p>
-                        <span class="k">Email</span>
-                        <a href="mailto:dev@jsf.io">dev@jsf.io</a>
-                    </p>
-                    <p>
-                        <span class="k">Github</span>
-                        <a href="https://github.com/modsognir">github.com/modsognir</a>
-                    </p>
-                    <p>
-                        <span class="k">Based in</span>
-                        Auckland, New Zealand
+                <div>
+                    <p class="contact-pitch">Tell me what you're building.</p>
+                    <p class="contact-detail">
+                        <a href="mailto:dev@jsf.io">dev@jsf.io</a><br>
+                        <a href="https://github.com/modsognir">github.com/modsognir</a><br>
+                        Auckland · UTC+12
                     </p>
                 </div>
                 <div class="field">
                     <label for="contact-message">Your message</label>
-                    <textarea id="contact-message" rows="4" placeholder="What are you working on?" oninput="composeEmail()"></textarea>
-                    <a class="btn send-mail" href="mailto:dev@jsf.io?subject=Contact%20from%20website">Send message →</a>
+                    <textarea id="contact-message" rows="5" placeholder="What are you working on, and where is it stuck?" oninput="composeEmail()"></textarea>
+                    <a class="btn send-mail" href="mailto:dev@jsf.io?subject=Contact%20from%20jsf.io">Open in email</a>
                 </div>
             </div>
         </section>
@@ -228,9 +216,8 @@
     <script>
         function composeEmail() {
             const message = document.getElementById('contact-message').value;
-            const subject = 'Contact from website';
             document.querySelector('.send-mail').href =
-                `mailto:dev@jsf.io?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+                `mailto:dev@jsf.io?subject=${encodeURIComponent('Contact from jsf.io')}&body=${encodeURIComponent(message)}`;
         }
     </script>
 </body>
